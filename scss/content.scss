@@ -1,0 +1,98 @@
+#content {
+    min-height: 100px;
+    max-width: 1200px;
+    position: relative;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: $nav-height;
+    z-index: 1;
+    pointer-events: none;
+
+    @include sm {
+        margin-top: $nav-height + 70px;
+    }
+
+    .content-container {
+        margin-left: 330px;
+        margin-right: 15px;
+        pointer-events: all;
+        padding-top: 25px;
+        padding-bottom: 30px;
+
+        @include sm {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        h1 {
+            margin-bottom: 15px;
+                        
+            @include sm {
+                font-size: 30px;
+                text-align: center;
+            }
+        }
+
+        .content-section {
+            min-height: 100px;
+            background-color: $secondary-color;
+            border-radius: 10px;
+            box-shadow: rgba(0, 0, 0, 0.06) 0.4375rem 0.125rem 1.625rem 0px;
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+
+            h2 {
+                background-image: linear-gradient(to left, #296cd8, #d02fb6);
+                background-size: 100%;
+                color: $accent-color;
+                font-size: 25px;
+                text-align: center;
+                -webkit-background-clip: text;
+                -moz-background-clip: text;
+                -webkit-text-fill-color: transparent; 
+                -moz-text-fill-color: transparent;
+                text-shadow: #d02fb53f 1px 1px 20px;
+            }
+            
+            @include sm {
+                display: block;
+            }
+
+            .break {
+                width: 100%;
+                height: 0;
+            }
+
+            .sub-section {
+                min-height: 50px;
+                border-radius: 10px;
+                background-color: $accent2-color;
+                color: lighten($color: $accent2-color, $amount: 30);
+                margin: 10px;
+                flex: 1;
+                padding: 15px;
+                height: max-content;
+                flex-flow: wrap;
+
+                .sub-section-big-icon {
+                    font-size: 150px;
+                    text-align: center;
+                    display: block;
+                    margin: 20px;
+                    background-image: linear-gradient(to right, #296cd8, #d02fb6);
+                    background-size: 100%;
+                    -webkit-background-clip: text;
+                    -moz-background-clip: text;
+                    -webkit-text-fill-color: transparent; 
+                    -moz-text-fill-color: transparent;
+                }
+
+                .btn-icon-rounded {
+                    background-color: darken($color: $accent2-color, $amount: 5);
+                }
+            }
+        }
+    }
+}

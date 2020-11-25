@@ -1,0 +1,115 @@
+#sidemenu {
+    position: fixed;
+    top: $nav-height;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    user-select: none;
+
+    @include sm {
+        display: none;
+    }
+
+    .sidebar-container {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 1200px;
+        position: relative;
+        padding-left: 15px;
+        overflow: auto;
+        max-height: 100%;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        padding-bottom: 25px;
+        padding-top: 25px;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        #copyright {
+            color: lighten($color: $accent2-color, $amount: 30);
+            margin-left: 65px;
+            font-size: 11px;
+        }
+
+        .menu {
+            min-height: 100px;
+            background-color: $secondary-color;
+            width: 300px;
+            border-radius: 10px;
+            box-shadow: rgba(0, 0, 0, 0.06) 0.4375rem 0.125rem 1.625rem 0px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+
+            a {
+                text-decoration: none;
+            }
+
+            .menu-item {
+                height: 48px;
+                display: flex;
+                align-items: center;
+                border-radius: 0.5625rem;
+                margin: 12px 13px;
+                cursor: pointer;
+                background-color: $accent2-color;
+                color: lighten($color: $accent2-color, $amount: 30);
+                transition: 0.2s;
+
+                .new-feature-icon {
+                    justify-self: right;
+                    margin-left: 10px;
+                    background: darken($color: $accent2-color, $amount: 10);
+                    color: lighten($color: $accent2-color, $amount: 30);
+                    font-size: 10px;
+                    padding: 3px 5px;
+                    border-radius: 10px;
+                    transition: 0.2s;
+                }
+                    
+                &:hover {
+                    letter-spacing: 1px;
+                    background-color: darken($color: $accent2-color, $amount: 10);
+
+                    .new-feature-icon {
+                        background: lighten($color: $accent2-color, $amount: 10);
+                        color: darken($color: $accent2-color, $amount: 10);
+                        font-weight: 800;
+                        letter-spacing: 0px;
+                    }
+                }
+                
+                &:active {
+                    background-color: darken($color: $accent2-color, $amount: 15);
+                }
+
+                .menu-item-icon {
+                    margin-left: 5px;
+                    padding: 5px 12px;
+                    border-radius: 4px;
+                }
+                
+                &.active {
+                    font-weight: 650;
+                    background: linear-gradient(to left, #0041aa, #d02fb6);
+                    color: white;
+                    background-repeat: repeat-y;
+                    background-repeat: repeat-x;
+                    background-size: 100% 90px;
+                    background-position: 0 -30px;
+
+                    &:hover {
+                        box-shadow: 0 100px 100px -100px #d02fb6 inset;
+                        letter-spacing: 0;
+                    }
+
+                    .new-feature-icon {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
