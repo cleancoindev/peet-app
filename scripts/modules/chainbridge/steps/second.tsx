@@ -45,7 +45,13 @@ class SecondStepChainBridge extends React.Component {
         } else if(this.checkAddr(this.props.destChain, this.state.dstAddr) == null) {
             return this.setState({errorContent: `Invalid ${this.props.destChain.toUpperCase()} destination address format`})
         }
-        alert('ok')
+
+        this.props.onStepChange(3, {
+            fromChain: this.props.fromChain,
+            destChain: this.props.destChain,
+            fromAddr: this.state.fromAddr,
+            dstAddr: this.state.dstAddr
+        });
     }
 
     
@@ -65,7 +71,7 @@ class SecondStepChainBridge extends React.Component {
                 </div>
 
                 { this.state.errorContent !== undefined && 
-                    <div className="content-sub col-12">
+                    <div className="content-sub">
                     <div className="alert" role="alert">
                         {this.state.errorContent}
                     </div>
