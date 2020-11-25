@@ -101,7 +101,8 @@ class ThirdStepChainBridge extends React.Component {
                         <p>Cancel your current waiting request with the pin code received at the start of the processing, if you lost it, wait until the timer end.</p>
                     <div className="col-12">
                         <form>
-                        <input style={{width: 200}} value={this.state.dstAddr} onChange={() => {}} type="text" id="pinCode" placeholder="Enter Pin Code"/>
+                        <input style={{width: 200, height: "55px", display: "block", marginLeft: "auto",
+                            marginRight: "auto", marginBottom: "10px", fontSize: "30px", letterSpacing: "5px"}} value={this.state.dstAddr} onChange={() => {}} type="text" id="pinCode" placeholder="Enter Pin Code"/>
                             <input onClick={() => {this.props.onStepChange(1, undefined)}} id="cancel" className="cancel-button" type="submit" value="Cancel request"></input>
                         </form>
                      </div>
