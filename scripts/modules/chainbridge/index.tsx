@@ -1,6 +1,12 @@
 import * as React from 'react'
 import { connect } from "react-redux";
 import FirstStepChainBridge from "./steps/first"
+import SecondStepChainBridge from "./steps/second"
+
+interface BridgeSwap {
+    fromChain: string,
+    destChain: string
+}
 
 class ChainBridge extends React.Component {
   
@@ -9,7 +15,18 @@ class ChainBridge extends React.Component {
         super(props);
 
         this.state = {
-            currentStep: 1
+            currentStep: 2,
+            currentSwap: {fromChain:"eth", destChain:"neo"}
+        }
+
+        this.onStepChange = this.onStepChange.bind(this)
+    }
+
+    onStepChange(step: number, datas: BridgeSwap = undefined) {
+        if (datas !== undefined) {
+            this.setState({currentStep: step, currentSwap: datas})
+        } else {
+            this.setState({currentStep: step})
         }
     }
 
@@ -24,9 +41,9 @@ class ChainBridge extends React.Component {
             </div>
 
             {(this.state.currentStep == 1 && 
-            <FirstStepChainBridge/>)
+            <FirstStepChainBridge {...this.state.currentSwap} onStepChange={this.onStepChange}/>)
             || (this.state.currentStep == 2 && 
-            <FirstStepChainBridge/>) }
+            <SecondStepChainBridge {...this.state.currentSwap} onStepChange={this.onStepChange} />) }
 
         </div>;
     }

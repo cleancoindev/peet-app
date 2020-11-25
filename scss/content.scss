@@ -130,10 +130,10 @@
             -webkit-border-radius: 4em;
             -ms-border-radius: 4em;
             border-radius: 4em;
-
+            margin:5px;
+            outline: none;
         }
 
-        
         input[type="submit"]:enabled {
             background-image: linear-gradient(to right, #296cd8, #d02fb6);
             color: #47195aba;
@@ -142,7 +142,19 @@
         input:hover[type="submit"]:enabled
 		{  
 			background-image: linear-gradient(to right, #2e5491, #882077);
-		}
+        }
+        
+
+        .cancel-button:hover {
+            background-color: #313ea5 !important;
+        }
+
+        .cancel-button {
+            background-color: #4250b2 !important;
+            background-image: none !important;
+            color:white !important;
+            outline: none;
+        }
 
         select {
             width: 100%;
@@ -152,7 +164,19 @@
             background-image: linear-gradient(to right, #296cd8, #d02fb6);
             color: #47195aba;
             font-weight: 600;
+            outline: none;
             text-align-last:center;
+        }
+
+        input[type="text"] {
+            outline: none;
+            width: 100%;
+            background-image: linear-gradient(to right, #1f4e98, #652fd0);
+            border-radius: 15px;
+            height: 45px;
+            text-align-last:center;
+            color:white;
+            font-weight: 600;
         }
 
         .alert {

@@ -12,13 +12,14 @@ class FirstStepChainBridge extends React.Component {
         {name:"Kyber Network", symbol: "kyber", available: false}
     ]
 
+    public props: any
     public state: any
     constructor(props: any) {
         super(props);
 
         this.state = {
-            fromChainValue: "eth",
-            toChainValue: "neo",
+            fromChainValue: this.props.fromChain,
+            toChainValue: this.props.destChain,
             agreed: false,
             errorContent: undefined
         }
@@ -57,7 +58,10 @@ class FirstStepChainBridge extends React.Component {
             return this.setState({errorContent: `Chain ${this.state.toChainValue.toUpperCase()} not available yet, please check the token page to get the list of supported tokens.`})
         }
 
-        alert('ok!')
+        this.props.onStepChange(2, {
+            fromChain: this.state.fromChainValue,
+            destChain: this.state.toChainValue
+        });
     }
 
     render() {
@@ -65,7 +69,7 @@ class FirstStepChainBridge extends React.Component {
             <div className="content-section">
                 <div className="sub-section">
                     <div className="content-sub">
-                        <label className="col-md-12" htmlFor="from-chain">Select your From Chain</label>
+                        <label className="col-12" htmlFor="from-chain">Select your From Chain</label>
                         <select name="from-chain" value={this.state.fromChainValue} onChange={this.handleFromChainChange}>
                         {this.available_chains.map((elem: any)=> {
                             return (<option key={`from-${elem.symbol}`} value={`${elem.symbol}`}>{elem.name}</option>)
@@ -76,7 +80,7 @@ class FirstStepChainBridge extends React.Component {
 
                 <div className="sub-section">
                     <div className="content-sub">
-                        <label className="col-md-12" htmlFor="from-chain">Select your Destination Chain</label>
+                        <label className="col-12" htmlFor="from-chain">Select your Destination Chain</label>
                         <select name="dst-chain" value={this.state.toChainValue} onChange={this.handleDestChainChange}>
                         {this.available_chains.reverse().map((elem: any)=> {
                             return (<option key={`from-${elem.symbol}`} value={`${elem.symbol}`}>{elem.name}</option>)
