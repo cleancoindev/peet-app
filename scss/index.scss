@@ -41,6 +41,24 @@ body {
         background-size: 100% 90px;
         background-position: 0 -30px;
     }
+
+    &.active-green {
+        background: linear-gradient(to left, #00aa2b, #3ece31);
+        color: white;
+        background-repeat: repeat-y;
+        background-repeat: repeat-x;
+        background-size: 100% 90px;
+        background-position: 0 -30px;
+    }
+
+    &.active-orange {
+        background: linear-gradient(to left, #aa6000, #ce9731);
+        color: white;
+        background-repeat: repeat-y;
+        background-repeat: repeat-x;
+        background-size: 100% 90px;
+        background-position: 0 -30px;
+    }
 }
 
 .btn-only-icon {

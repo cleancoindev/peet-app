@@ -1,9 +1,14 @@
 import * as React from 'react'
 import { connect } from "react-redux";
+import { fetchPTEWETHPrice } from "../../actions/eth";
 
 class PayPeet extends React.Component {
     constructor(props: any) {
         super(props);
+    }
+
+    componentDidMount() {
+        this.props.requestFetchPTEWETHPrice();
     }
 
     render() {
@@ -19,5 +24,9 @@ class PayPeet extends React.Component {
 export default connect((state: any, ownProps: any) => {
     return {}
 }, (dispatch) => {
-    return {}
+    return {
+        requestFetchPTEWETHPrice: () => {
+            dispatch(fetchPTEWETHPrice() as any)
+        }
+    }
 })(PayPeet)

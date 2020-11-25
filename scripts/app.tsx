@@ -11,11 +11,22 @@ import {
 } from "react-router-dom";
 import ReactTooltip from 'react-tooltip';
 import { TransitionGroup, CSSTransition } from "react-transition-group";
+import { requestLogin, requestLogout } from './actions/eth';
 
 
 class App extends React.Component {
     constructor(props: AppState) {
         super(props);
+    }
+
+    componentDidMount() {
+        window.ethereum.on('accountsChanged', (accounts) => {
+            this.props.requestLogout();
+        })
+
+        window.ethereum.on('networkChanged', (networkId) => {
+            this.props.requestLogin();
+        })
     }
 
     render() {
@@ -61,5 +72,12 @@ export default connect((state: any, ownProps: any) => {
         location: state.router.location
     }
 }, (dispatch) => {
-    return {}
+    return {
+        requestLogin: () => {
+            dispatch(requestLogin() as any)
+        },
+        requestLogout: () => {
+            dispatch(requestLogout() as any)
+        }
+    }
 })(App);

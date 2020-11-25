@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { connect } from "react-redux";
-import { requestLogin } from '../../actions/eth';
+import { requestLogin, requestLogout } from '../../actions/eth';
 import { EthState } from '../../reducers/types/eth';
+import { ChainId } from '@uniswap/sdk'
 
 class Navbar extends React.Component {
     constructor(props: EthState) {
@@ -19,9 +20,14 @@ class Navbar extends React.Component {
                     <div className="mobile-container">
                         {
                         (this.props.eth as EthState).accounts.length > 0 ?
-                            <div className="btn-icon-rounded active" style={{maxWidth: "200px"}}>
-                                <i className="fas fa-user"></i> {(this.props.eth as EthState).accounts[0]}
-                            </div>
+                            <span>
+                                <div className={"btn-icon-rounded " + ((this.props.eth as EthState).netName == "MAINNET" ? "active-green" : "active-orange")} style={{maxWidth: "200px"}}>
+                                    {(this.props.eth as EthState).netName}
+                                </div>
+                                <div className="btn-icon-rounded active" style={{maxWidth: "200px"}}>
+                                    <i className="fas fa-user"></i> {(this.props.eth as EthState).accounts[0]}
+                                </div>
+                            </span>
                             :
                             <div className="btn-icon-rounded" onClick={() => this.props.requestLogin()}>
                                 <i className="fas fa-sign-in-alt"></i> Connect to a wallet

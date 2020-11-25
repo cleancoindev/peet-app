@@ -8,7 +8,8 @@ const middleware = web3 => store => next => async action => {
         store.dispatch({
             type: SET_CONNECTED,
             isConnected: accounts.length > 0,
-            accounts: accounts
+            accounts: accounts,
+            netId: await web3.eth.net.getId()
         } as SetConnectedAction)
     }
 }
