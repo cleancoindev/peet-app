@@ -2,10 +2,13 @@ import * as React from 'react'
 import { connect } from "react-redux";
 import FirstStepChainBridge from "./steps/first"
 import SecondStepChainBridge from "./steps/second"
+import ThirdStepChainBridge from "./steps/third"
 
 interface BridgeSwap {
     fromChain: string,
-    destChain: string
+    destChain: string,
+    fromAddr: string,
+    dstAddr: string
 }
 
 class ChainBridge extends React.Component {
@@ -15,8 +18,8 @@ class ChainBridge extends React.Component {
         super(props);
 
         this.state = {
-            currentStep: 2,
-            currentSwap: {fromChain:"eth", destChain:"neo"}
+            currentStep: 1,
+            currentSwap: {fromChain:"eth", destChain:"neo", fromAddr: "0x8984e422E30033A84B780420566046d25EB3519a", dstAddr: "AUqw19M2ykCNaH37PNy8sjQiqkATdeFgkz"}
         }
 
         this.onStepChange = this.onStepChange.bind(this)
@@ -43,7 +46,9 @@ class ChainBridge extends React.Component {
             {(this.state.currentStep == 1 && 
             <FirstStepChainBridge {...this.state.currentSwap} onStepChange={this.onStepChange}/>)
             || (this.state.currentStep == 2 && 
-            <SecondStepChainBridge {...this.state.currentSwap} onStepChange={this.onStepChange} />) }
+            <SecondStepChainBridge {...this.state.currentSwap} onStepChange={this.onStepChange} />)
+            || (this.state.currentStep == 3 && 
+            <ThirdStepChainBridge {...this.state.currentSwap} onStepChange={this.onStepChange} />) }
 
         </div>;
     }

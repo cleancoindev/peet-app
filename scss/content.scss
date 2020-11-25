@@ -180,12 +180,41 @@
         }
 
         .alert {
-            background-image: linear-gradient(to right, #88316d, #9c2121);
+           background-image: linear-gradient(to right, #88316d, #9c2121);
         }
 
         .content-sub {
             text-align: center;
         }
+
+        #clockdiv{
+            font-family: sans-serif;
+            display: inline-block;
+            font-weight: 100;
+            text-align: center;
+            font-size: 30px;
+          }
+          
+          #clockdiv > div{
+            padding: 10px;
+            border-radius: 3px;
+            background: #32395d;
+            display: inline-block;
+          }
+          
+          #clockdiv div > span{
+            padding: 15px;
+            border-radius: 3px;
+            background-image: linear-gradient(to right, #296cd8, #d02fb6);
+            display: inline-block;
+            color:white
+          }
+
+          .smalltext{
+            padding-top: 5px;
+            font-size: 16px;
+          }
+          
     }
 
 }

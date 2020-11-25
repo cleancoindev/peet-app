@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { connect } from "react-redux";
+import PeetOracleProvider from '../../../providers/peetOracle';
 
 class SecondStepChainBridge extends React.Component {
 
@@ -39,12 +40,22 @@ class SecondStepChainBridge extends React.Component {
         }
     }
 
-    handleValidateRequest(_: any) {
+    async handleValidateRequest(_: any) {
         if (this.checkAddr(this.props.fromChain, this.state.fromAddr) == null) {
             return this.setState({errorContent: `Invalid ${this.props.fromChain.toUpperCase()} source address format`}) 
         } else if(this.checkAddr(this.props.destChain, this.state.dstAddr) == null) {
             return this.setState({errorContent: `Invalid ${this.props.destChain.toUpperCase()} destination address format`})
         }
+
+        try {
+            const result: any = await PeetOracleProvider.initSwapRequest({
+                from_chain: this.props.fromChain,
+                to_chain: this.props.destChain,
+                from_addr: this.state.fromAddr,
+                to_addr: this.state.dstAddr
+            })
+            console.log(result)
+        } catch(e) { console.error(e) }
 
         this.props.onStepChange(3, {
             fromChain: this.props.fromChain,
