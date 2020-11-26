@@ -1,4 +1,5 @@
 import Env from "../env";
+import CancelSwapRequest from "./models/cancelSwapRequest";
 import { InitSwapRequest } from "./models/initSwapRequest";
 
 export default class PeetOracleProvider {
@@ -14,6 +15,26 @@ export default class PeetOracleProvider {
             };
 
             fetch(`${this.baseUrl}/swap/init`, requestOptions)
+                .then(response => {
+                    return response.json()
+                })
+                .then(data => { cb(data) })
+                .catch(error => {
+                    res(error)
+                });
+        })
+    }
+
+    static cancelSwapRequest(request: CancelSwapRequest): Promise<any>
+    {
+        return new Promise((cb, res) => {
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(request)
+            };
+
+            fetch(`${this.baseUrl}/swap/cancel`, requestOptions)
                 .then(response => {
                     return response.json()
                 })

@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import * as React from 'react'
 import { connect } from "react-redux";
+import PeetOracleProvider from "../../../providers/peetOracle";
 
 const moment = require("moment");
 class ThirdStepChainBridge extends React.Component {
@@ -12,13 +13,17 @@ class ThirdStepChainBridge extends React.Component {
 
         this.state = {
             minsLeft: 0,
-            secsLeft: 0
+            secsLeft: 0,
+            errorContent: undefined,
+            pinCode: undefined
         }
 
         this.props = props
 
         this.initializeClock = this.initializeClock.bind(this)
         this.getTimeRemaining = this.getTimeRemaining.bind(this)
+        this.onChangePinCode = this.onChangePinCode.bind(this)
+        this.onCancelRequest = this.onCancelRequest.bind(this)
     }
 
     componentDidMount() {
@@ -52,6 +57,32 @@ class ThirdStepChainBridge extends React.Component {
         updateClock();
         timeinterval = setInterval(updateClock, 1000);
       }
+
+    onChangePinCode(event: any) {
+        if (event.target.value.length <= 4) {
+            this.setState({pinCode: event.target.value})
+        }
+    }
+
+    async onCancelRequest(event: any) {
+        event.preventDefault()
+        try {
+            const response: any = await PeetOracleProvider.cancelSwapRequest({
+                from_addr: this.props.fromAddr,
+                pin_code: this.state.pinCode
+            })
+            if (response.result) {
+
+                // clear any storage
+                this.props.onStepChange(1, {
+                    fromChain: this.props.fromChain,
+                    destChain: this.props.destChain
+                });
+            } else {
+                return this.setState({errorContent: `${response.message}`})
+            }
+        } catch(e) { console.error(e) }
+    }
 
     render() {
         return <div>
@@ -88,6 +119,21 @@ class ThirdStepChainBridge extends React.Component {
                         Time left to deposit until bridge request auto expiration..
                         <hr/>
                         </div>}
+
+                        {this.props.pinCode !== undefined &&
+                        <div className="content-sub col-12">
+                            <div className="alert alert-infos" role="alert">
+                            To secure you're swap request, here is a generated pin code that you can use if you want to cancel your swap request:
+                            <br/><span style={{color:"white", background: "linear-gradient(to right, #448a83, #4f38ab)"}}>{this.props.pinCode}</span><br/>
+                            <span style={{color:"red"}}>Note that if you wish to cancel this request before the timer end.</span>
+                            </div>
+                        </div>}
+
+                        {/* <div className="content-sub col-12">
+                            <div className="alert alert-success" role="alert">
+                                Hello, how are you
+                            </div>
+                        </div> */}
                    
                     </div>
                 </div>
@@ -98,12 +144,19 @@ class ThirdStepChainBridge extends React.Component {
             <div className="content-section">
                 <div className="sub-section">
                     <div className="content-sub">
+                    { this.state.errorContent !== undefined && 
+                        <div className="content-sub col-12">
+                        <div className="alert" role="alert">
+                            {this.state.errorContent}
+                        </div>
+                    </div>}
+
                         <p>Cancel your current waiting request with the pin code received at the start of the processing, if you lost it, wait until the timer end.</p>
                     <div className="col-12">
                         <form>
                         <input style={{width: 200, height: "55px", display: "block", marginLeft: "auto",
-                            marginRight: "auto", marginBottom: "10px", fontSize: "30px", letterSpacing: "5px"}} value={this.state.dstAddr} onChange={() => {}} type="text" id="pinCode" placeholder="Enter Pin Code"/>
-                            <input onClick={() => {this.props.onStepChange(1, undefined)}} id="cancel" className="cancel-button" type="submit" value="Cancel request"></input>
+                            marginRight: "auto", marginBottom: "10px", fontSize: "14", letterSpacing: "5px"}} value={this.state.pinCode} onChange={this.onChangePinCode} type="text" id="pinCode" placeholder="Enter Pin Code"/>
+                            <input onClick={this.onCancelRequest} id="cancel" className="cancel-button" type="submit" value="Cancel request"></input>
                         </form>
                      </div>
                     </div>

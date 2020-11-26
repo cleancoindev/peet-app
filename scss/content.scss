@@ -186,8 +186,23 @@
         }
 
         .alert {
+            color:#ffffff;
            background-image: linear-gradient(to right, #88316d, #9c2121);
         }
+
+        .alert-success {
+            background-image: linear-gradient(to right, #3fbd72, #386806);
+            color:#ffffff;
+            font-weight: 600;
+         }
+
+         
+        .alert-infos {
+            background-image: linear-gradient(to right, #1f4e98, #652fd0);
+            color:#c24fe6;
+            font-weight: 600;
+         }
+
 
         .content-sub {
             text-align: center;
