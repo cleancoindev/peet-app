@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import ReactTooltip from 'react-tooltip';
 import { TransitionGroup, CSSTransition } from "react-transition-group";
+import ReduxToastr from 'react-redux-toastr'
 import { requestLogin, requestLogout } from './actions/eth';
 
 
@@ -20,17 +21,29 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        window.ethereum.on('accountsChanged', (accounts) => {
-            this.props.requestLogout();
-        })
-
-        window.ethereum.on('networkChanged', (networkId) => {
-            this.props.requestLogin();
-        })
+        if(window.ethereum != null) {
+            window.ethereum.on('accountsChanged', (accounts) => {
+                this.props.requestLogout();
+            })
+    
+            window.ethereum.on('networkChanged', (networkId) => {
+                this.props.requestLogin();
+            })
+        }
     }
 
     render() {
         return <div>
+            <ReduxToastr
+                timeOut={4000}
+                newestOnTop={false}
+                preventDuplicates
+                position="bottom-right"
+                getState={(state) => state.toastr} // This is the default
+                transitionIn="fadeIn"
+                transitionOut="fadeOut"
+                progressBar
+                closeOnToastrClick/>
             <ReactTooltip />
             <Navbar />
             <Sidemenu />

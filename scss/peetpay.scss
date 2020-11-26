@@ -15,3 +15,25 @@
         width: 100%;
     }
 }
+
+.bonus-circle {
+    background: linear-gradient(to left, #296cd8, #d02fb6);
+    color: white;
+    font-size: 30px;
+    text-align: center;
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    border-radius: 100px;
+    display: inline-block;
+    position: relative;
+
+    .bonus-text {
+        position: absolute;
+        font-size: 10px;
+        line-height: 15px;
+        bottom: 6px;
+        left: 0;
+        right: 0;
+    }
+}

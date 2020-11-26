@@ -2,6 +2,7 @@ interface EthState {
     isConnected: boolean,
     accounts: Array<string>,
     currentPTEWETHPrice: number,
+    currentPTEWBTCPrice: number,
     netId: number,
     netName: string
 }
@@ -18,8 +19,14 @@ interface SetCurrentPTEWETHPrice {
     currentPTEWETHPrice: number
 }
 
+interface SetCurrentPTEWBTCPrice {
+    type: string,
+    currentPTEWBTCPrice: number
+}
+
 export {
     EthState,
     SetConnectedAction,
-    SetCurrentPTEWETHPrice
+    SetCurrentPTEWETHPrice,
+    SetCurrentPTEWBTCPrice
 }

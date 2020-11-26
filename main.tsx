@@ -10,6 +10,8 @@ import { ConnectedRouter } from 'connected-react-router';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import '@fortawesome/fontawesome-free/css/all.css';
+import 'react-redux-toastr/lib/css/react-redux-toastr.min.css'
+
 const rootElement = document.getElementById('root');
 const store: Store = configureStore();
 

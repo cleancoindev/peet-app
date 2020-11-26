@@ -9,11 +9,21 @@ import { web3ProviderMiddleware } from "./middlewares";
 import * as abi from "./abi";
 import Env from "./env";
 import { requestLogin } from "./actions/eth";
+import {reducer as toastrReducer} from 'react-redux-toastr';
 
 export const history = createBrowserHistory();
 
-export const web3 = new Web3((window as any).ethereum);
+let web3 = null;
+if((window as any).ethereum == null) {
+    console.log("No web3 found by default")
+    web3 = new Web3(new Web3.providers.WebsocketProvider(Env().WEB3_PROVIDER));
+}
+else {
+    web3 = new Web3((window as any).ethereum)
+}
+export { web3 };
 export const wethContract = new web3.eth.Contract(abi.weth as any, Env().WETH_CONTRACT_ADDR);
+export const wbtcContract = new web3.eth.Contract(abi.weth as any, Env().WBTC_CONTRACT_ADDR);
 export const peetPayContract = new web3.eth.Contract(abi.peetPay as any, Env().PEETPAY_CONTRACT_ADDR);
 
 let currentStore: Store = null;
@@ -23,7 +33,8 @@ export const configureStore = (): Store => {
     currentStore = createStore(combineReducers(
         {
             ...reducers, 
-            router: connectRouter(history)
+            router: connectRouter(history),
+            toastr: toastrReducer
         }), {}, composeWithDevTools(applyMiddleware(thunk, routerMiddleware(history), web3ProviderMiddleware(web3))));
 
     return currentStore;
