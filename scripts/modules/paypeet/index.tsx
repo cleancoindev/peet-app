@@ -27,6 +27,9 @@ class PayPeet extends React.Component<ReducersCombinedState & PayPeetProps, PayP
 
     componentDidMount() {
         this.props.requestFetchPTEWETHPrice();
+        
+        if(this.props.eth.accounts.length == 0) return;
+        this.fetchBalanceBySelectedCurrency();
     }
 
     componentDidUpdate(prevProps: ReducersCombinedState & PayPeetProps, prevState: PayPeetState) {
