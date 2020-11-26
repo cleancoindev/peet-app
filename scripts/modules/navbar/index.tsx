@@ -42,27 +42,27 @@ class Navbar extends React.Component<ReducersCombinedState & NavbarProps, {}> {
                         <div className="break-online-mobile"></div>
 
                         <div className="btn-icon-rounded btn-only-icon" data-tip="Twitter">
-                            <i className="fab fa-twitter"></i>
+                            <a target="_blank" href="https://twitter.com/peet_fi"><i className="fab fa-twitter"></i></a>
                         </div>
 
                         <div className="btn-icon-rounded btn-only-icon" data-tip="Discord">
-                            <i className="fab fa-discord"></i>
+                            <a target="_blank" href="https://discord.gg/vszbYWj"><i className="fab fa-discord"></i></a>
                         </div>
 
                         <div className="btn-icon-rounded btn-only-icon" data-tip="Telegram">
-                            <i className="fab fa-telegram"></i>
+                            <a target="_blank" href="https://t.me/peetdefi"> <i className="fab fa-telegram"></i></a>
                         </div>
 
                         <div className="btn-icon-rounded btn-only-icon" data-tip="BitcoinTalk">
-                            <i className="fab fa-bitcoin"></i>
+                            <a target="_blank" href="https://bitcointalk.org/index.php?topic=5285069.20"><i className="fab fa-bitcoin"></i></a>
                         </div>
 
                         <div className="btn-icon-rounded btn-only-icon" data-tip="Github">
-                            <i className="fab fa-github"></i>
+                            <a target="_blank" href="https://github.com/PeetFinanceDefi"><i className="fab fa-github"></i></a>
                         </div>
 
                         <div className="btn-icon-rounded btn-only-icon" data-tip="Medium">
-                            <i className="fab fa-medium"></i>
+                            <a target="_blank" href="https://medium.com/@peetdefi"><i className="fab fa-medium"></i></a>
                         </div>
                     </div>
                 </div>

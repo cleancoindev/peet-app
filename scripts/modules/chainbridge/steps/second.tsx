@@ -10,8 +10,8 @@ class SecondStepChainBridge extends React.Component {
         super(props);
 
         this.state = {
-            fromAddr: "0x8984e422E30033A84B780420566046d25EB3519a",
-            dstAddr: "AUqw19M2ykCNaH37PNy8sjQiqkATdeFgkz",
+            fromAddr: "",
+            dstAddr: "",
             errorContent: undefined
         }
 
@@ -48,28 +48,34 @@ class SecondStepChainBridge extends React.Component {
         }
 
         try {
-            const result: any = await PeetOracleProvider.initSwapRequest({
+            const response: any = await PeetOracleProvider.initSwapRequest({
                 from_chain: this.props.fromChain,
                 to_chain: this.props.destChain,
                 from_addr: this.state.fromAddr,
                 to_addr: this.state.dstAddr
             })
-            console.log(result)
+            if (response.result) {
+                this.props.onStepChange(3, {
+                    fromChain: response.data.fromChain,
+                    destChain: response.data.toChain,
+                    fromAddr: response.data.fromAddr,
+                    dstAddr: response.data.dstAddr,
+                    pinCode: response.data.pinCode,
+                    oracleAddr: response.data.oracleAddr,
+                    expireAt: response.data.expireAt
+                });
+            } else {
+                return this.setState({errorContent: `An error occured, server responsed: ${response.message}`})
+            }
         } catch(e) { console.error(e) }
 
-        this.props.onStepChange(3, {
-            fromChain: this.props.fromChain,
-            destChain: this.props.destChain,
-            fromAddr: this.state.fromAddr,
-            dstAddr: this.state.dstAddr
-        });
     }
 
     
     render() {
         return <div>
             <div className="content-section">
-                    <div className="sub-section">
+                    <div className="sub-section col-12">
                         <div className="content-sub" style={{padding:"10px"}}>
                             <label className="col-12" id="addrFromChainLabel" htmlFor="addrFromChain">Enter your source {this.props.fromChain.toUpperCase()} address</label>
                             <input value={this.state.fromAddr} onChange={this.handleChangeFromAddr} type="text" id="addrFromChain"/>
@@ -82,7 +88,7 @@ class SecondStepChainBridge extends React.Component {
                 </div>
 
                 { this.state.errorContent !== undefined && 
-                    <div className="content-sub">
+                    <div className="content-sub col-12">
                     <div className="alert" role="alert">
                         {this.state.errorContent}
                     </div>

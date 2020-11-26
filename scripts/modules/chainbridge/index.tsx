@@ -8,7 +8,10 @@ interface BridgeSwap {
     fromChain: string,
     destChain: string,
     fromAddr: string,
-    dstAddr: string
+    dstAddr: string,
+    expireAt: Date,
+    pinCode: undefined,
+    oracleAddr: string
 }
 
 class ChainBridge extends React.Component {
@@ -19,7 +22,15 @@ class ChainBridge extends React.Component {
 
         this.state = {
             currentStep: 1,
-            currentSwap: {fromChain:"eth", destChain:"neo", fromAddr: "0x8984e422E30033A84B780420566046d25EB3519a", dstAddr: "AUqw19M2ykCNaH37PNy8sjQiqkATdeFgkz"}
+            currentSwap: {
+                fromChain:"eth",
+                destChain:"neo",
+                fromAddr: "",
+                dstAddr: "",
+                expireAt: undefined,
+                pinCode: undefined,
+                oracleAddr: undefined
+            }
         }
 
         this.onStepChange = this.onStepChange.bind(this)
@@ -27,9 +38,22 @@ class ChainBridge extends React.Component {
 
     onStepChange(step: number, datas: BridgeSwap = undefined) {
         if (datas !== undefined) {
+            localStorage.setItem('swapRequest', JSON.stringify(datas));
             this.setState({currentStep: step, currentSwap: datas})
         } else {
             this.setState({currentStep: step})
+        }
+        localStorage.setItem('lastStep', `${step}`)
+    }
+
+    componentWillMount() {
+        const currentSwap = localStorage.getItem('swapRequest');
+        if (currentSwap != null) {
+            this.setState({currentSwap: JSON.parse(currentSwap)})
+        }
+        const lastStepRaw = localStorage.getItem('lastStep')
+        if (lastStepRaw != null) {
+            this.setState({currentStep: Number(lastStepRaw)})
         }
     }
 
