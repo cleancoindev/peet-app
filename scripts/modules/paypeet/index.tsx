@@ -21,17 +21,21 @@ interface PayPeetState {
     valueFrom: number
     currentBonus: number
     rawValue: string
+    lastTxHash: string
+    waitingForTx: boolean
 }
 
 class PayPeet extends React.Component<ReducersCombinedState & PayPeetProps, PayPeetState>  {
     constructor(props: ReducersCombinedState & PayPeetProps) {
         super(props);
         this.state = {
+            lastTxHash: '',
             fromAddr: '',
             selectFrom: 'eth',
             valueFrom: 0,
             rawValue: "0",
-            currentBonus: 0
+            currentBonus: 0,
+            waitingForTx: false
         }
     }
 
@@ -137,13 +141,24 @@ class PayPeet extends React.Component<ReducersCombinedState & PayPeetProps, PayP
     }
 
     requestTransaction(amount: String) {
+        this.setState({waitingForTx: true})
         toastr.warning('Transaction request', 'Please accept the transaction of ' + this.state.valueFrom + " " + this.state.selectFrom.toUpperCase() + " in Metamask");
         if(this.state.selectFrom == "eth") {
-            web3.eth.sendTransaction({to: Env().PEETPAY_CONTRACT_ADDR, from: this.props.eth.accounts[0], value: amount});
+            web3.eth.sendTransaction({to: Env().PEETPAY_CONTRACT_ADDR, from: this.props.eth.accounts[0], value: amount}).then((result) => {
+                console.log(result);
+                toastr.success('Approved', 'You have approved the transaction with success, check the TX Hash on Metamask');
+                this.setState({lastTxHash: result.transactionHash, waitingForTx: false})
+            }).catch((ex: Error) => {
+                this.setState({waitingForTx: false})
+                toastr.error('Error', 'Transaction declined')
+            });;
         } else if(this.state.selectFrom == "weth") {
             peetPayContract.methods.transferToken(amount).send({from: this.props.eth.accounts[0]}).then((result) => {
+                console.log(result);
                 toastr.success('Approved', 'You have approved the transaction with success, check the TX Hash on Metamask');
+                this.setState({lastTxHash: result.transactionHash, waitingForTx: false})
             }).catch((ex: Error) => {
+                this.setState({waitingForTx: false})
                 toastr.error('Error', 'Transaction declined')
             });
         }
@@ -152,6 +167,16 @@ class PayPeet extends React.Component<ReducersCombinedState & PayPeetProps, PayP
     render() {
         return <div>
             <h1>PayPeet - Swap your currency</h1>
+            {this.state.lastTxHash != '' ? <div className="alert-success" role="alert" 
+                style={{textAlign: "center", padding: "10px", borderRadius: "10px", marginBottom: "15px", marginTop: "15px"}}>
+                Tx Hash : {this.state.lastTxHash}
+            </div> : null}
+
+            {this.state.waitingForTx ? <div className="alert-infos" role="alert" 
+                style={{textAlign: "center", padding: "10px", borderRadius: "10px", marginBottom: "15px", marginTop: "15px"}}>
+                <i className="fas fa-spinner"></i> Waiting for TX ..
+            </div> : null}
+
             <div className="content-section">
                 {this.props.eth.currentPTEWETHPrice == 0 ? <div style={{display: "inline-block", marginLeft: "auto", marginRight: "auto", marginTop: "10px"}}>
                     <h2 style={{fontSize: "25px", marginTop: "10px"}}>
