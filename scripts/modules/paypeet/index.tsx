@@ -187,7 +187,7 @@ class PayPeet extends React.Component<ReducersCombinedState & PayPeetProps, PayP
                         </div>
                     </div>
                     
-                    <h2 style={{fontSize: "20px", marginTop: "15px"}}>If you don't have Metamask you can just send your ETH on this address</h2>
+                    <h2 style={{fontSize: "20px", marginTop: "15px"}}>If you don't have Metamask you can just send your ETH on this address and you will receive PTE back.</h2>
                     <input type="text" readOnly style={{marginBottom: "10px", textAlign: "center"}} value={Env().PEETPAY_CONTRACT_ADDR} />
                 </div>}
             </div>

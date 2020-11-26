@@ -2,6 +2,7 @@ import * as React from 'react'
 import { connect } from "react-redux";
 import * as ConnectedReactRouter from 'connected-react-router'
 import PeetOracleProvider from '../../providers/peetOracle';
+import $ from 'jquery';
 
 class Home extends React.Component {
 
@@ -34,6 +35,19 @@ class Home extends React.Component {
     componentDidMount() {
         this.getFrontInfos()
         this.interval = setInterval(this.getFrontInfos, 30000)
+
+        
+        let templateElementCmc = document.createElement("script")
+        templateElementCmc.src = `https://files.coinmarketcap.com/static/widget/currency.js`
+        document.body.appendChild(templateElementCmc)
+
+        let templateElementCg = document.createElement("script")
+        templateElementCg.src = `https://widgets.coingecko.com/coingecko-coin-compare-chart-widget.js`
+        document.body.appendChild(templateElementCg)
+
+        setInterval(() => {
+            console.log($(".cg-container"))
+        }, 500)
     }
 
     render() {
@@ -65,25 +79,15 @@ class Home extends React.Component {
 
             <div className="content-section">
                 <div className="sub-section">
-                    <h2>Expanding the Use of BlockChain Technology</h2>
-                    <i className="fas fa-cube sub-section-big-icon"></i>
-                    Peet platform's objectives allow you to convert any asset of value into our native asset PTE or use your asset as collateral for PTE. You can then lend or stake to earn the highest rates possible across any supported blockchain.
-                    <br /><br />
-                    The Peet platform integrates blockchain technology with traditional off chain assets through the use of decentralized protocols. This 'Chainlink' allows for the value of USD, stocks, home equity, or any share of ownership to be represented on chain and used as collateral to earn a high rate of return.
-                    <div style={{ textAlign: "center", marginTop: "15px" }}>
-                        <div className="btn-icon-rounded" onClick={() => this.props.push("/chain-bridge")}>
-                            <i className="fas fa-sign-in-alt"></i> Go to the Chain Bridge
-                        </div>
-                    </div>
+                    <div dangerouslySetInnerHTML={{
+                        __html: '<coingecko-coin-compare-chart-widget  background-color="#b52626" coin-ids="peet-defi" currency="usd" locale="fr"></coingecko-coin-compare-chart-widget>'
+                    }}></div>
                 </div>
+            </div>
+
+            <div className="content-section">
                 <div className="sub-section">
-                    <h2>Interoperability & Capital Efficiency</h2>
-                    <i className="fas fa-chart-bar sub-section-big-icon"></i>
-                    Decentralized Finance has contributed to the development of many innovative services that could not exist in the traditional financial industry and has opened up a world of opportunity to investors.
-                    <br /><br />
-                    The problem with the current system is most of these DeFi applications exist soley on the Ethereum network. PTE, the native token of Peet exists on multiple blockchains and has the ability to interact with multiple types of financial applications at once.
-                    <br /><br />
-                    Because of this Peet can offer its users more options, lower fees, and higher returns than typical single blockchain applications who make up the vast majority of projects in the space. You will earn more and keep more with Peet
+                    <div className="coinmarketcap-currency-widget" data-currencyid="7659" data-base="USD" data-secondary="" data-ticker="true" data-rank="true" data-marketcap="true" data-volume="true" data-statsticker="true" data-stats="USD"></div>
                 </div>
             </div>
         </div>;
