@@ -1,5 +1,5 @@
-import { SET_CONNECTED } from "../actions/eth";
-import { EthState, SetConnectedAction } from "./types/eth";
+import { SET_CONNECTED, SET_CURRENT_PTE_WETH_PRICE } from "../actions/eth";
+import { EthState, SetConnectedAction, SetCurrentPTEWETHPrice } from "./types/eth";
 import { web3 } from "../store";
 import { ChainId } from '@uniswap/sdk'
 
@@ -11,10 +11,12 @@ const initialState: EthState = {
     netName: ''
 }
 
-export default (state = initialState, action: SetConnectedAction): EthState => {
+export default (state = initialState, action: SetConnectedAction & SetCurrentPTEWETHPrice): EthState => {
     switch(action.type) {
         case SET_CONNECTED: 
             return { ...state, isConnected: action.isConnected, accounts: action.accounts, netId: action.netId, netName: ChainId[action.netId] }
+        case SET_CURRENT_PTE_WETH_PRICE: 
+            return { ...state, currentPTEWETHPrice: action.currentPTEWETHPrice }
         default: return state;
     }
 }

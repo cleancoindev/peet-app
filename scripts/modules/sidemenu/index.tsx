@@ -6,8 +6,9 @@ import {
     withRouter
   } from "react-router-dom";
   import * as ConnectedReactRouter from 'connected-react-router'
+import ReducersCombinedState from '../../reducers/types/reducers';
 
-class Sidemenu extends React.Component {
+class Sidemenu extends React.Component<ReducersCombinedState, {}> {
     constructor(props: any) {
         super(props);
     }

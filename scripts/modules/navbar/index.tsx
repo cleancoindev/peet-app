@@ -3,9 +3,14 @@ import { connect } from "react-redux";
 import { requestLogin, requestLogout } from '../../actions/eth';
 import { EthState } from '../../reducers/types/eth';
 import { ChainId } from '@uniswap/sdk'
+import ReducersCombinedState from '../../reducers/types/reducers';
 
-class Navbar extends React.Component {
-    constructor(props: EthState) {
+interface NavbarProps {
+    requestLogin: Function
+}
+
+class Navbar extends React.Component<ReducersCombinedState & NavbarProps, {}> {
+    constructor(props: ReducersCombinedState & NavbarProps) {
         super(props);
     }
 

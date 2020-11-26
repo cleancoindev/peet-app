@@ -1,0 +1,17 @@
+.arrow-to {
+    font-size: 45px;
+    vertical-align: middle;
+    background-image: linear-gradient(to right, #296cd8, #d02fb6);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent; 
+    -moz-text-fill-color: transparent;
+    margin-left: 20px;
+    margin-right: 20px;
+
+    @include sm {
+        text-align: center;
+        width: 100%;
+    }
+}

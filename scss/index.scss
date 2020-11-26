@@ -3,6 +3,9 @@
 @import "navbar.scss";
 @import "sidemenu.scss";
 @import "content.scss";
+@import "peetpay.scss";
+
+@import "components/selecttextcombo.scss";
 
 body {
     background-color: $primary-color !important;

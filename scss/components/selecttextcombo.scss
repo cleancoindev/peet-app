@@ -1,0 +1,92 @@
+.select-text-combo {
+    display: inline-block;
+    vertical-align: middle;
+    
+    @include sm {
+        display: block;
+        input[type="number"] {
+            width: 350px;
+        }
+    }
+
+    .select-container {
+        position: relative;
+
+        .current-select {
+            padding: 7px 14px;
+            cursor: pointer;
+            background-color: lighten($color: $secondary-color, $amount: 10);
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+            transition: 0.2s;
+            display: inline-block;
+            vertical-align: middle;
+            min-width: 100px;
+            position: relative;
+
+            &:hover {
+                background-color: lighten($color: $secondary-color, $amount: 15);
+                img {
+                    transform: scale(0.9);
+                }
+            }
+
+            img {
+                width: 15px;
+                transition: 0.2s;
+                vertical-align: middle;
+            }
+
+            span {
+                vertical-align: middle;
+                margin-left: 10px;
+            }
+        }
+
+        .select-other-container {
+            position: absolute;
+            top: 39px;
+            left: 0;
+
+            .select-other-container-item {
+                padding: 7px 14px;
+                cursor: pointer;
+                background-color: lighten($color: $secondary-color, $amount: 5);
+                transition: 0.2s;
+                display: block;
+                vertical-align: middle;
+                min-width: 100px;
+
+                img {
+                    width: 15px;
+                    transition: 0.2s;
+                    vertical-align: middle;
+                }
+
+                span {
+                    vertical-align: middle;
+                    margin-left: 10px;
+                }
+
+                &:hover {
+                    background-color: lighten($color: $secondary-color, $amount: 15);
+                    img {
+                        transform: scale(0.9);
+                    }
+                }
+            }
+        }
+
+        input[type="number"] {
+            height: 39px;
+            vertical-align: middle;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+            background-color: lighten($color: $secondary-color, $amount: 20);
+            border: none;
+            color: white;
+            padding-left: 10px;
+            min-width: 250px;
+        }
+    }
+}
