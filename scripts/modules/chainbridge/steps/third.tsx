@@ -8,6 +8,7 @@ class ThirdStepChainBridge extends React.Component {
 
     public props: any
     public state: any
+    public interval: any = undefined
     constructor(props: any) {
         super(props);
 
@@ -15,7 +16,10 @@ class ThirdStepChainBridge extends React.Component {
             minsLeft: 0,
             secsLeft: 0,
             errorContent: undefined,
-            pinCode: undefined
+            pinCode: undefined,
+            tx: undefined,
+            amount: undefined,
+            ended: false
         }
 
         this.props = props
@@ -24,10 +28,61 @@ class ThirdStepChainBridge extends React.Component {
         this.getTimeRemaining = this.getTimeRemaining.bind(this)
         this.onChangePinCode = this.onChangePinCode.bind(this)
         this.onCancelRequest = this.onCancelRequest.bind(this)
+        this.isSwapExpired = this.isSwapExpired.bind(this)
+        this.updateState = this.updateState.bind(this)
+        this.onEnded = this.onEnded.bind(this)
+    }
+
+    isSwapExpired() {
+        if (new Date(this.props.expireAt) < moment(new Date()).toDate()) {
+            return true
+        }
+        return false
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval)
     }
 
     componentDidMount() {
-        this.initializeClock(moment().add(1, 'hours').toDate())
+        this.initializeClock(this.props.expireAt)
+        if (this.isSwapExpired()) {
+            return this.props.onStepChange(1, {
+                fromChain: this.props.fromChain,
+                destChain: this.props.destChain
+            });
+        }
+
+        const fetchState = async () => {
+            try {
+                if (this.state.ended) { 
+                    return clearInterval(this.interval)
+                }
+                const response: any = await PeetOracleProvider.fetchSwapState({
+                    from_chain: this.props.fromChain,
+                    to_chain: this.props.destChain,
+                    from_addr: this.props.fromAddr,
+                    to_addr: this.props.dstAddr
+                })
+                if (response.result) { 
+                    this.updateState(response.data)
+                }
+                if (this.isSwapExpired()) { 
+                    return this.props.onStepChange(1, {
+                        fromChain: this.props.fromChain,
+                        destChain: this.props.destChain
+                    });
+                }
+            } catch(e) { console.error(e) }
+        }
+
+        fetchState()
+        this.interval = setInterval(fetchState, 5000)
+        
+    }
+
+    updateState(data: any) {
+        this.setState({tx: data?.tx ?? undefined, amount: data?.amount ?? undefined, ended: data?.ended ?? 0})
     }
 
     getTimeRemaining(endtime) {
@@ -72,8 +127,6 @@ class ThirdStepChainBridge extends React.Component {
                 pin_code: this.state.pinCode
             })
             if (response.result) {
-
-                // clear any storage
                 this.props.onStepChange(1, {
                     fromChain: this.props.fromChain,
                     destChain: this.props.destChain
@@ -82,6 +135,13 @@ class ThirdStepChainBridge extends React.Component {
                 return this.setState({errorContent: `${response.message}`})
             }
         } catch(e) { console.error(e) }
+    }
+
+    onEnded(_: any) {
+        return this.props.onStepChange(1, {
+            fromChain: this.props.fromChain,
+            destChain: this.props.destChain
+        });
     }
 
     render() {
@@ -103,9 +163,9 @@ class ThirdStepChainBridge extends React.Component {
                 <div className="sub-section">
                     <div className="content-sub">
                         <p>Please send your PTE to the address below using the source address (From):</p>
-                        <input type="text" id="sendTo" value="0x03a2c6731A70611ffC486207129DD3f8DECb0a65" disabled/>
+                        <input type="text" id="sendTo" value={this.props.oracleAddr} disabled/>
                         <hr/>
-                        {this.state.minsLeft > 0 && <div>
+                        {this.state.minsLeft > 0 && this.state.tx === undefined && <div>
                             <div id="clockdiv">
                             <div style={{margin: 10}}>
                                 <span className="minutes">{this.state.minsLeft}</span>
@@ -120,7 +180,7 @@ class ThirdStepChainBridge extends React.Component {
                         <hr/>
                         </div>}
 
-                        {this.props.pinCode !== undefined &&
+                        {this.props.pinCode !== undefined && this.state.tx === undefined &&
                         <div className="content-sub col-12">
                             <div className="alert alert-infos" role="alert">
                             To secure you're swap request, here is a generated pin code that you can use if you want to cancel your swap request:
@@ -129,11 +189,22 @@ class ThirdStepChainBridge extends React.Component {
                             </div>
                         </div>}
 
-                        {/* <div className="content-sub col-12">
+                        {this.state.tx !== undefined &&
+                        <div className="content-sub col-12">
                             <div className="alert alert-success" role="alert">
-                                Hello, how are you
+                                Swap successfully initiated<br/> <small>(tx: {this.state.tx})</small><br/>
+                                We received <b>{this.state.amount} PTE</b> on the Chain Bridge
+                                <hr/>
+                                {!this.state.ended &&
+                                 <div style={{fontWeight:650, fontSize:20}}>Swap done with success!</div> ||
+                                 this.state.ended && <div style={{fontWeight:650, fontSize:20}}>Swap done with success!</div>}
                             </div>
-                        </div> */}
+
+                            {this.state.ended &&
+                            <div>
+                                <input onClick={this.onEnded} id="confirm" type="submit" value="Back to The Bridge"></input>
+                            </div>}
+                        </div> }
                    
                     </div>
                 </div>
@@ -141,6 +212,7 @@ class ThirdStepChainBridge extends React.Component {
             </div>
 
             
+            {this.state.tx === undefined &&
             <div className="content-section">
                 <div className="sub-section">
                     <div className="content-sub">
@@ -162,7 +234,7 @@ class ThirdStepChainBridge extends React.Component {
                     </div>
                 </div>
 
-            </div>
+            </div>}
 
         </div>;
     }
