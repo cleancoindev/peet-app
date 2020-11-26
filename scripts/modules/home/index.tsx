@@ -1,10 +1,39 @@
 import * as React from 'react'
 import { connect } from "react-redux";
 import * as ConnectedReactRouter from 'connected-react-router'
+import PeetOracleProvider from '../../providers/peetOracle';
 
 class Home extends React.Component {
+
+    public state: any
+    public interval: any
     constructor(props: any) {
         super(props);
+
+        this.state = {
+            supply: 0,
+            price: 0,
+            addresses: 0,
+            swaps: 0
+        }
+        this.getFrontInfos = this.getFrontInfos.bind(this)
+    }
+
+    async getFrontInfos() {
+        const response = await PeetOracleProvider.fetchTokenInfos()
+        if (response.result) {
+            this.setState({
+                supply: response.supply,
+                price: response.price,
+                addresses: response.addresses,
+                swaps: response.swaps
+            })
+        }
+    }
+
+    componentDidMount() {
+        this.getFrontInfos()
+        this.interval = setInterval(this.getFrontInfos, 30000)
     }
 
     render() {
@@ -15,22 +44,22 @@ class Home extends React.Component {
                 <div className="sub-section">
                     <h2 style={{fontSize: "18px"}}>Market Cap</h2>
                     <i className="fas fa-chart-pie sub-section-big-icon" style={{fontSize: "60px", margin: "5px"}}></i>
-                    <h2>0.776M</h2>
+                    <h2>{this.state.supply / 1000000}M</h2>
                 </div>
                 <div className="sub-section">
                     <h2 style={{fontSize: "18px"}}>Peet Price</h2>
                     <i className="fas fa-coins sub-section-big-icon" style={{fontSize: "60px", margin: "5px"}}></i>
-                    <h2>7.76 $</h2>
+                    <h2>{this.state.price} $</h2>
                 </div>
                 <div className="sub-section">
                     <h2 style={{fontSize: "18px"}}>ETH User Wallets</h2>
                     <i className="fas fa-wallet sub-section-big-icon" style={{fontSize: "60px", margin: "5px"}}></i>
-                    <h2>608</h2>
+                    <h2>{this.state.addresses}</h2>
                 </div>
                 <div className="sub-section">
                     <h2 style={{fontSize: "18px"}}>Cross Chain Swap</h2>
                     <i className="fas fa-random sub-section-big-icon" style={{fontSize: "60px", margin: "5px"}}></i>
-                    <h2>0</h2>
+                    <h2>{this.state.swaps}</h2>
                 </div>
             </div>
 

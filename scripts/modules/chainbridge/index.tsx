@@ -25,8 +25,8 @@ class ChainBridge extends React.Component {
             currentSwap: {
                 fromChain:"eth",
                 destChain:"neo",
-                fromAddr: "0x8984e422E30033A84B780420566046d25EB3519a",
-                dstAddr: "AUqw19M2ykCNaH37PNy8sjQiqkATdeFgkz",
+                fromAddr: "",
+                dstAddr: "",
                 expireAt: undefined,
                 pinCode: undefined,
                 oracleAddr: undefined

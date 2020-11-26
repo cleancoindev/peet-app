@@ -19,7 +19,7 @@ class Exchanges extends React.Component {
                     </div>
                     <div style={{ textAlign: "center", marginTop: "15px" }}>
                         <div className="btn-icon-rounded" onClick={() => {}}>
-                            <i className="fas fa-sign-in-alt"></i> Go to Uniswap
+                            <a target="_blank" href="https://info.uniswap.org/token/0x51bb9c623226ce781f4a54fc8f4a530a47142b6b"><i className="fas fa-sign-in-alt"></i> Go to Uniswap</a>
                         </div>
                     </div>
                 </div>
@@ -31,7 +31,7 @@ class Exchanges extends React.Component {
                     </div>
                     <div style={{ textAlign: "center", marginTop: "15px" }}>
                         <div className="btn-icon-rounded" onClick={() => {}}>
-                            <i className="fas fa-sign-in-alt"></i> Go to ForkDelta
+                            <a target="_blank" href="https://forkdelta.app/#!/trade/0x51bb9c623226ce781f4a54fc8f4a530a47142b6b-ETH"><i className="fas fa-sign-in-alt"></i> Go to ForkDelta</a>
                         </div>
                     </div>
                 </div>
@@ -43,7 +43,7 @@ class Exchanges extends React.Component {
                     </div>
                     <div style={{ textAlign: "center", marginTop: "15px" }}>
                         <div className="btn-icon-rounded" onClick={() => {}}>
-                            <i className="fas fa-sign-in-alt"></i> Go to FatBTC
+                            <a target="_blank" href="https://www.fatbtc.com/trading?currency=PTE%2FBTC"><i className="fas fa-sign-in-alt"></i> Go to FatBTC</a>
                         </div>
                     </div>
                 </div>
@@ -55,7 +55,7 @@ class Exchanges extends React.Component {
                     </div>
                     <div style={{ textAlign: "center", marginTop: "15px" }}>
                         <div className="btn-icon-rounded" onClick={() => {}}>
-                            <i className="fas fa-sign-in-alt"></i> Go to Altilly
+                            <a target="_blank" href="https://altilly.com/asset/PTE"><i className="fas fa-sign-in-alt"></i> Go to Altilly</a>
                         </div>
                     </div>
                 </div>

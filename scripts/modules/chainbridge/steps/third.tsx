@@ -77,7 +77,7 @@ class ThirdStepChainBridge extends React.Component {
         }
 
         fetchState()
-        this.interval = setInterval(fetchState, 5000)
+        this.interval = setInterval(fetchState, 15000)
         
     }
 
@@ -196,10 +196,9 @@ class ThirdStepChainBridge extends React.Component {
                                 We received <b>{this.state.amount} PTE</b> on the Chain Bridge
                                 <hr/>
                                 {!this.state.ended &&
-                                 <div style={{fontWeight:650, fontSize:20}}>Swap done with success!</div> ||
-                                 this.state.ended && <div style={{fontWeight:650, fontSize:20}}>Swap done with success!</div>}
+                                 <div style={{fontWeight:650, fontSize:20}}>Waiting for chain confirmations...</div> ||
+                                 this.state.ended && <div style={{fontWeight:650, fontSize:20, color: "#59f0dc"}}>Swap done with success!</div>}
                             </div>
-
                             {this.state.ended &&
                             <div>
                                 <input onClick={this.onEnded} id="confirm" type="submit" value="Back to The Bridge"></input>

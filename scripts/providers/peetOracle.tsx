@@ -65,4 +65,23 @@ export default class PeetOracleProvider {
                 });
         })
     }
+
+    static fetchTokenInfos(): Promise<any>
+    {
+        return new Promise((cb, res) => {
+            const requestOptions = {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+            };
+
+            fetch(`${this.baseUrl}/front/token`, requestOptions)
+                .then(response => {
+                    return response.json()
+                })
+                .then(data => { cb(data) })
+                .catch(error => {
+                    res(error)
+                });
+        })
+    }
 }

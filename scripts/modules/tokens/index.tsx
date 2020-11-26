@@ -18,7 +18,7 @@ class Tokens extends React.Component {
                     <h2>Circulating Supply : 90.000</h2>
                     <div style={{ textAlign: "center", marginTop: "15px" }}>
                         <div className="btn-icon-rounded" onClick={() => {}}>
-                            <i className="fas fa-sign-in-alt"></i> Go to Ethereum Contract
+                            <a target="_blank" href="https://etherscan.io/token/0x51bb9c623226ce781f4a54fc8f4a530a47142b6b"><i className="fas fa-sign-in-alt"></i> Go to Ethereum Contract</a>
                         </div>
                     </div>
                 </div>
@@ -31,7 +31,7 @@ class Tokens extends React.Component {
                     <h2>Circulating Supply : 10.000</h2>
                     <div style={{ textAlign: "center", marginTop: "15px" }}>
                         <div className="btn-icon-rounded" onClick={() => {}}>
-                            <i className="fas fa-sign-in-alt"></i> Go to Neo Contract
+                            <a target="_blank" href="https://neotube.io/nep5/b259ee05485cd9f729ac5a2d5cd462221e40be96/page/1"><i className="fas fa-sign-in-alt"></i> Go to Neo Contract</a>
                         </div>
                     </div>
                 </div>
