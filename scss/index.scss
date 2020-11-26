@@ -4,6 +4,7 @@
 @import "sidemenu.scss";
 @import "content.scss";
 @import "peetpay.scss";
+@import "widgets.scss";
 
 @import "components/selecttextcombo.scss";
 
@@ -27,6 +28,10 @@ body {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+
+    a {
+        color: lighten($color: $accent2-color, $amount: 30);
+    }
     
     &:hover {
         background-color: darken($color: $accent2-color, $amount: 10);

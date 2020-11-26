@@ -1,0 +1,15 @@
+.coinmarketcap-currency-widget > * {
+    border-color: darken($color: rgb(43 49 79), $amount: 5) !important;
+
+    & > * {
+        border-top: 1px solid darken($color: rgb(43 49 79), $amount: 5) !important;
+        border-right: 1px solid darken($color: rgb(43 49 79), $amount: 5) !important;
+        border-color: darken($color: rgb(43 49 79), $amount: 5) !important;
+
+        & > * {
+            border-top: 1px solid darken($color: rgb(43 49 79), $amount: 5) !important;
+            border-right: 1px solid darken($color: rgb(43 49 79), $amount: 5) !important;
+            border-color: darken($color: rgb(43 49 79), $amount: 5) !important;
+        }
+    }
+}

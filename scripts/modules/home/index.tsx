@@ -45,9 +45,33 @@ class Home extends React.Component {
         templateElementCg.src = `https://widgets.coingecko.com/coingecko-coin-compare-chart-widget.js`
         document.body.appendChild(templateElementCg)
 
-        setInterval(() => {
-            console.log($(".cg-container"))
-        }, 500)
+        this.waitForApplyWidgetStyle();
+    }
+
+    waitForApplyWidgetStyle() {
+        setTimeout(() => {
+            if(document.querySelector("coingecko-coin-compare-chart-widget") == null) {
+                this.waitForApplyWidgetStyle();
+                return;
+            }
+            const host = document.querySelector("coingecko-coin-compare-chart-widget").shadowRoot;
+            if(host == null || host.querySelector(".highcharts-background") == null) {
+                this.waitForApplyWidgetStyle();
+                return;
+            }
+            var sheet = new CSSStyleSheet
+            sheet.replaceSync( `.cg-container { background-color: rgb(43 49 79); border: none; } 
+                .highcharts-title { color: white !important; fill: white !important; }
+                .highcharts-button-normal text { fill: white !important; }
+                .cg-linear-button rect { fill: #d02fb6 !important; }
+                .cg-primary-color-dark { color: #d02fb6 !important; }`)
+            host.adoptedStyleSheets = [ sheet ];
+            host.querySelector(".highcharts-background").setAttribute("fill", "none");
+            host.querySelector(".highcharts-button-pressed rect").setAttribute("fill", "#d02fb6");
+            host.querySelector(".highcharts-scrollbar").setAttribute("display", "none");
+            console.log( host.querySelector(".cg-container .cg-widget .cg-absolute"));
+            host.querySelector(".cg-container .cg-widget .cg-absolute").style.display = "none";
+        }, 100)
     }
 
     render() {
@@ -80,7 +104,7 @@ class Home extends React.Component {
             <div className="content-section">
                 <div className="sub-section">
                     <div dangerouslySetInnerHTML={{
-                        __html: '<coingecko-coin-compare-chart-widget  background-color="#b52626" coin-ids="peet-defi" currency="usd" locale="fr"></coingecko-coin-compare-chart-widget>'
+                        __html: '<coingecko-coin-compare-chart-widget coin-ids="peet-defi" currency="usd" locale="fr"></coingecko-coin-compare-chart-widget>'
                     }}></div>
                 </div>
             </div>
