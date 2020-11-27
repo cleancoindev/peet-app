@@ -18,6 +18,13 @@ class Home extends React.Component {
             swaps: 0
         }
         this.getFrontInfos = this.getFrontInfos.bind(this)
+        this.handleResize = this.handleResize.bind(this)
+    }
+
+    
+
+    handleResize() {
+        this.waitForApplyWidgetStyle()
     }
 
     async getFrontInfos() {
@@ -33,6 +40,7 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
+        window.addEventListener('resize', this.handleResize)
         this.getFrontInfos()
         this.interval = setInterval(this.getFrontInfos, 30000)
 
@@ -69,9 +77,8 @@ class Home extends React.Component {
             host.querySelector(".highcharts-background").setAttribute("fill", "none");
             host.querySelector(".highcharts-button-pressed rect").setAttribute("fill", "#d02fb6");
             host.querySelector(".highcharts-scrollbar").setAttribute("display", "none");
-            console.log( host.querySelector(".cg-container .cg-widget .cg-absolute"));
             host.querySelector(".cg-container .cg-widget .cg-absolute").style.display = "none";
-        }, 100)
+        }, 10)
     }
 
     render() {

@@ -9,6 +9,7 @@ import {
 import ReducersCombinedState from '../../reducers/types/reducers';
 import {AppState} from '../../reducers/types/app';
 import { requestSwitchSidebarOpen } from '../../actions/app';
+import {toastr} from 'react-redux-toastr';
 
 interface SidemenuProps {
     location: any,
@@ -43,6 +44,7 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                                 <i className="fas fa-random"></i>
                             </div>
                             <span>Chain Bridge</span>
+                            <div className="new-feature-icon">new</div>
                         </div>
                         <div className={"menu-item " + (location.pathname == "/paypeet" ? "active" : "")} onClick={() => {
                             this.props.push("/paypeet")
@@ -53,6 +55,15 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                             </div>
                             <span>PayPeet</span>
                             <div className="new-feature-icon">new</div>
+                        </div>
+
+                        <div className="menu-item" onClick={() => {
+                                toastr.warning("Staking", "Coming soon, stay tuned on our social networks!")
+                            }}>
+                            <div className="menu-item-icon">
+                                <i className="fas fa-boxes"></i>
+                            </div>
+                            <span>Staking</span>
                         </div>
                         <div className="menu-item" onClick={() => window.open("https://etherscan.io/token/0x51bb9c623226ce781f4a54fc8f4a530a47142b6b")}>
                             <div className="menu-item-icon">
@@ -79,6 +90,7 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                             </div>
                             <span>Exchanges</span>
                         </div>
+
                     </div>
                     
                     <div className="menu">
