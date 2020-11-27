@@ -7,30 +7,47 @@ import {
   } from "react-router-dom";
   import * as ConnectedReactRouter from 'connected-react-router'
 import ReducersCombinedState from '../../reducers/types/reducers';
+import {AppState} from '../../reducers/types/app';
+import { requestSwitchSidebarOpen } from '../../actions/app';
 
-class Sidemenu extends React.Component<ReducersCombinedState, {}> {
+interface SidemenuProps {
+    location: any,
+    app: AppState,
+    requestSwitchSidebarOpen: Function
+}
+
+class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}> {
     constructor(props: any) {
         super(props);
     }
 
     render() {
-        return <div id="sidemenu">
+        return <div id="sidemenu" className={this.props.app.sidebarOpen ? "sidemenu-open" : ""}>
             <Router>
                 <div className="sidebar-container">
                     <div className="menu">
-                        <div className={"menu-item " + (location.pathname == "/" ? "active" : "")} onClick={() => this.props.push("/")}>
+                        <div className={"menu-item " + (location.pathname == "/" ? "active" : "")} onClick={() => {
+                            this.props.push("/")
+                            this.props.requestSwitchSidebarOpen();
+                        }}>
                             <div className="menu-item-icon">
                                 <i className="fas fa-chart-bar"></i>
                             </div>
                             <span>Analytics</span>
                         </div>
-                        <div className={"menu-item " + (location.pathname == "/chain-bridge" ? "active" : "")} onClick={() => this.props.push("/chain-bridge")}>
+                        <div className={"menu-item " + (location.pathname == "/chain-bridge" ? "active" : "")} onClick={() => {
+                            this.props.push("/chain-bridge")
+                            this.props.requestSwitchSidebarOpen();
+                        }}>
                             <div className="menu-item-icon">
                                 <i className="fas fa-random"></i>
                             </div>
                             <span>Chain Bridge</span>
                         </div>
-                        <div className={"menu-item " + (location.pathname == "/paypeet" ? "active" : "")} onClick={() => this.props.push("/paypeet")}>
+                        <div className={"menu-item " + (location.pathname == "/paypeet" ? "active" : "")} onClick={() => {
+                            this.props.push("/paypeet")
+                            this.props.requestSwitchSidebarOpen();
+                        }}>
                             <div className="menu-item-icon">
                                 <i className="fab fa-ethereum"></i>
                             </div>
@@ -43,13 +60,20 @@ class Sidemenu extends React.Component<ReducersCombinedState, {}> {
                             </div>
                             <span>Explorer</span>
                         </div>
-                        <div className={"menu-item " + (location.pathname == "/tokens" ? "active" : "")} onClick={() => this.props.push("/tokens")}>
+                        <div className={"menu-item " + (location.pathname == "/tokens" ? "active" : "")} onClick={() => {
+                            this.props.push("/tokens")
+                            
+                            this.props.requestSwitchSidebarOpen();
+                        }}>
                             <div className="menu-item-icon">
                                 <i className="fas fa-coins"></i>
                             </div>
                             <span>Tokens</span>
                         </div>
-                        <div className={"menu-item " + (location.pathname == "/exchanges" ? "active" : "")} onClick={() => this.props.push("/exchanges")}>
+                        <div className={"menu-item " + (location.pathname == "/exchanges" ? "active" : "")} onClick={() => {
+                            this.props.push("/exchanges")
+                            this.props.requestSwitchSidebarOpen();
+                        }}>
                             <div className="menu-item-icon">
                                 <i className="fas fa-exchange-alt"></i>
                             </div>
@@ -86,12 +110,16 @@ class Sidemenu extends React.Component<ReducersCombinedState, {}> {
 
 export default connect((state: any, ownProps: any) => {
     return {
-        location: state.router.location
+        location: state.router.location,
+        app: state.app
     }
 }, (dispatch) => {
     return {
         push: (route) => {
             dispatch(ConnectedReactRouter.push(route));
+        },
+        requestSwitchSidebarOpen: () => {
+            dispatch(requestSwitchSidebarOpen() as any)
         }
     }
 })(Sidemenu);

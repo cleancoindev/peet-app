@@ -1,4 +1,10 @@
 interface AppState {
-    
+    sidebarOpen: boolean
 }
-export default AppState;
+interface SwitchSidebarOpenAction{
+    type: string
+}
+export {
+    AppState,
+    SwitchSidebarOpenAction
+}

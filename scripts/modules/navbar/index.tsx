@@ -1,12 +1,14 @@
 import * as React from 'react'
 import { connect } from "react-redux";
 import { requestLogin, requestLogout } from '../../actions/eth';
+import { requestSwitchSidebarOpen } from '../../actions/app';
 import { EthState } from '../../reducers/types/eth';
 import { ChainId } from '@uniswap/sdk'
 import ReducersCombinedState from '../../reducers/types/reducers';
 
 interface NavbarProps {
     requestLogin: Function
+    requestSwitchSidebarOpen: Function
 }
 
 class Navbar extends React.Component<ReducersCombinedState & NavbarProps, {}> {
@@ -16,6 +18,10 @@ class Navbar extends React.Component<ReducersCombinedState & NavbarProps, {}> {
 
     render() {
         return <div id="navbar">
+            <div className="burger-menu-icon" onClick={() => this.props.requestSwitchSidebarOpen()}>
+                <i className="fas fa-bars"></i>
+            </div>
+
             <div className="nav-container">
                 <div className="logo">
                     <img src={require("../../../assets/pdfilogo.png")} />
@@ -79,6 +85,9 @@ export default connect((state: any, ownProps: any) => {
     return {
         requestLogin: () => {
             dispatch(requestLogin() as any)
+        },
+        requestSwitchSidebarOpen: () => {
+            dispatch(requestSwitchSidebarOpen() as any)
         }
     }
 })(Navbar)

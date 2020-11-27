@@ -12,6 +12,25 @@ $nav-heightmobile: auto;
     user-select: none;
     z-index: 100;
 
+    .burger-menu-icon {
+        font-size: 40px;
+        display: none;
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        cursor: pointer;
+        z-index: 100;
+        transition: 0.2s;
+
+        &:hover {
+            color: $accent3-color;
+        }
+
+        @include sm {
+            display: block;
+        }
+    }
+
     @include sm {
         height: $nav-heightmobile;
         padding-bottom: 10px;
@@ -46,6 +65,7 @@ $nav-heightmobile: auto;
                 position: relative;
 
                 .break-online-mobile {
+                    margin-top: 5px;
                     display: block;
                 }
             }
