@@ -13,14 +13,21 @@ import ReactTooltip from 'react-tooltip';
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import ReduxToastr from 'react-redux-toastr'
 import { requestLogin, requestLogout } from './actions/eth';
+import { bindNeoline } from "./actions/neo";
 
+interface AppProps {
+    bindNeoline: Function
+    requestLogout: Function
+    requestLogin: Function
+}
 
-class App extends React.Component {
-    constructor(props: AppState) {
+class App extends React.Component<AppState & AppProps, {}> {
+    constructor(props: AppState & AppProps) {
         super(props);
     }
 
     componentDidMount() {
+        // Bind ethereum
         if(window.ethereum != null) {
             window.ethereum.on('accountsChanged', (accounts) => {
                 this.props.requestLogout();
@@ -30,6 +37,9 @@ class App extends React.Component {
                 this.props.requestLogin();
             })
         }
+
+        // Bind Neo
+        this.props.bindNeoline();
     }
 
     render() {
@@ -91,6 +101,9 @@ export default connect((state: any, ownProps: any) => {
         },
         requestLogout: () => {
             dispatch(requestLogout() as any)
+        },
+        bindNeoline: () => {
+            dispatch(bindNeoline() as any)
         }
     }
 })(App);
