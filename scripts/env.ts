@@ -20,7 +20,7 @@ const prodEnv: Env = {
     WETH_CONTRACT_ADDR: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
     PEET_CONTRACT_ADDR: "0x51bb9c623226ce781f4a54fc8f4a530a47142b6b",
     WBTC_CONTRACT_ADDR: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
-    PEETPAY_CONTRACT_ADDR: "0x2eb1498409821bc2c25624cb767056f277c2fc0a",
+    PEETPAY_CONTRACT_ADDR: "0x770b6b2bdf62b1a54fd68e2447d51671da0ebf03",
     ORACLE_PEET_URL: "https://oracle.peetdecentralized.finance",
     WEB3_PROVIDER: "wss://mainnet.infura.io/ws/v3/4f1a24ed50654f56b6ccf068bc54d64c"
 }
@@ -30,4 +30,4 @@ const envs = {
     "production": prodEnv
 }
 
-export default (): Env => (envs['production'] as any) as Env;
+export default (): Env => (envs['development'] as any) as Env;

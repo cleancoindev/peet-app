@@ -35,8 +35,8 @@ class Navbar extends React.Component<ReducersCombinedState & NavbarProps, {}> {
                                 <div className={"btn-icon-rounded " + ((this.props.eth as EthState).netName == "MAINNET" ? "active-green" : "active-orange")} style={{maxWidth: "200px"}}>
                                     {(this.props.eth as EthState).netName}
                                 </div>
-                                <div className="btn-icon-rounded active" style={{maxWidth: "200px"}}>
-                                    <i className="fas fa-user"></i> {(this.props.eth as EthState).accounts[0]}
+                                <div className="btn-icon-rounded active" >
+                                    <i className="fas fa-user"></i> {`${this.props.eth.accounts[0].substr(0, 6)}...${this.props.eth.accounts[0].substr(this.props.eth.accounts[0].length - 6, this.props.eth.accounts[0].length)}`}
                                 </div>
                             </span>
                             :

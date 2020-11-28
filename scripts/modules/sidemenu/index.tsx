@@ -49,6 +49,7 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                         <div className={"menu-item " + (location.pathname == "/paypeet" ? "active" : "")} onClick={() => {
                             this.props.push("/paypeet")
                             this.props.requestSwitchSidebarOpen();
+                            // toastr.warning("Paypeet", "In a short maintenance, will be back in few minutes.")
                         }}>
                             <div className="menu-item-icon">
                                 <i className="fab fa-ethereum"></i>
