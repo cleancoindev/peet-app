@@ -184,7 +184,7 @@ class PayPeet extends React.Component<ReducersCombinedState & PayPeetProps, PayP
                     </h2>
                 </div> : <div style={{display: "inline-block", marginLeft: "auto", marginRight: "auto", marginTop: "10px"}}>
                     <input type="text" placeholder="From Address" style={{marginBottom: "10px", textAlign: "center"}} value={this.state.fromAddr} />
-                    <div style={{ marginRight: "auto", marginLeft: "auto"}}>
+                    <div style={{ marginRight: "auto", marginLeft: "auto", textAlign: "center"}}>
                         <SelectTextCombo readonly={false} selectedItem={this.state.selectFrom} items={[
                             {id: "eth", name: "ETH", image: require("../../../assets/ethereum-logo.png")},
                             {id: "weth", name: "WETH", image: require("../../../assets/ethereum-logo.png")}

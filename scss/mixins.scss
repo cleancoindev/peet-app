@@ -1,0 +1,10 @@
+@mixin gradient-text {
+    background-image: linear-gradient(to left, #296cd8, #d02fb6);
+    background-size: 100%;
+    color: $accent-color;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent; 
+    -moz-text-fill-color: transparent;
+    text-shadow: #d02fb53f 1px 1px 20px;
+}
