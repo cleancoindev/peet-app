@@ -21,6 +21,7 @@ interface PayPeetState {
     valueFrom: number
     currentBonus: number
     rawValue: string
+    baseRawValue: string
     lastTxHash: string
     waitingForTx: boolean
 }
@@ -34,6 +35,7 @@ class PayPeet extends React.Component<ReducersCombinedState & PayPeetProps, PayP
             selectFrom: 'eth',
             valueFrom: 0,
             rawValue: "0",
+            baseRawValue: "0",
             currentBonus: 0,
             waitingForTx: false
         }
@@ -92,14 +94,19 @@ class PayPeet extends React.Component<ReducersCombinedState & PayPeetProps, PayP
         if(this.props.eth.accounts.length == 0) return;
         web3.eth.getBalance(this.props.eth.accounts[0], (err, result) => {
             if(err) return;
-            this.setState({valueFrom: parseFloat(web3.utils.fromWei(result, "ether")), rawValue: web3.utils.fromWei(result, "ether")})
+            const value: number = Number(web3.utils.fromWei(result, "ether") * 0.8)
+            this.setState({valueFrom: parseFloat(web3.utils.fromWei(result, "ether")),
+             rawValue: value.toString(), baseRawValue: value.toString()})
         })
     }
 
     fetchWEthereumBalance() {
         if(this.props.eth.accounts.length == 0) return;
+        
         wethContract.methods.balanceOf(this.props.eth.accounts[0]).call({from: this.props.eth.accounts[0]}).then((result) => {
-            this.setState({valueFrom: parseFloat(web3.utils.fromWei(result, "ether")), rawValue: web3.utils.fromWei(result, "ether")})
+            const value: number =  Number(web3.utils.fromWei(result, "ether") * 0.8)
+            this.setState({valueFrom: parseFloat(web3.utils.fromWei(result, "ether")),
+             rawValue: value.toString(), baseRawValue: value.toString()})
         })
     }
 
@@ -189,8 +196,13 @@ class PayPeet extends React.Component<ReducersCombinedState & PayPeetProps, PayP
                             {id: "eth", name: "ETH", image: require("../../../assets/ethereum-logo.png")},
                             {id: "weth", name: "WETH", image: require("../../../assets/ethereum-logo.png")}
                         ]} value={this.state.rawValue} onChange={(value) => {
+                            if (value < 0) { value = 0}
+                            if (value > this.state.baseRawValue) { value = this.state.baseRawValue }
+
                             this.setState({valueFrom: parseFloat(value), rawValue: value});
                         }} onSelectChange={(value) => {
+                            if (value < 0) { value = 0 }
+                            if (value > this.state.baseRawValue) { value = this.state.baseRawValue }
                             this.setState({selectFrom: value});
                         }} />
                         <i className="fas fa-long-arrow-alt-right arrow-to"></i>
