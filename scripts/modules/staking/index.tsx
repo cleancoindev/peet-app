@@ -14,7 +14,7 @@ class Staking extends React.Component {
     constructor(props: any) {
         super(props);
         this.state = {
-            defaultChain: ChainPools.ETH
+            defaultChain: undefined
         }
 
         this.onChangeChain = this.onChangeChain.bind(this)
@@ -39,7 +39,7 @@ class Staking extends React.Component {
 
                 <div className="sub-section col-6">
                     <a href="#" onClick={() => { this.onChangeChain(ChainPools.ETH) }}>
-                        <div className="content-sub">
+                        <div className="content-sub content-sub-staking">
                             <img src={require("../../../assets/ethereum-logo.png")} style={{borderRadius: "15px", width: "30px"}} />
                         </div>
                     </a>
@@ -47,7 +47,7 @@ class Staking extends React.Component {
 
                 <div className="sub-section col-6">
                     <a href="#" onClick={() => { this.onChangeChain(ChainPools.NEO) }}>
-                        <div className="content-sub">
+                        <div className="content-sub content-sub-staking">
                         <img src={require("../../../assets/neo.png")} style={{borderRadius: "15px", width: "50px"}} />              
                         </div>
                     </a>
@@ -55,7 +55,7 @@ class Staking extends React.Component {
                 
                 <div className="sub-section col-6">
                     <a href="#" onClick={() => { this.onChangeChain(ChainPools.NULS) }}>
-                        <div className="content-sub">
+                        <div className="content-sub content-sub-staking">
                             <img src={require("../../../assets/nuls.svg")} style={{borderRadius: "15px", width: "125px"}} />            
                         </div>
                     </a>
