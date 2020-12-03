@@ -26,7 +26,7 @@
 
         h1 {
             margin-bottom: 15px;
-                        
+
             @include sm {
                 font-size: 30px;
                 text-align: center;
@@ -51,11 +51,11 @@
                 text-align: center;
                 -webkit-background-clip: text;
                 -moz-background-clip: text;
-                -webkit-text-fill-color: transparent; 
+                -webkit-text-fill-color: transparent;
                 -moz-text-fill-color: transparent;
                 text-shadow: #d02fb53f 1px 1px 20px;
             }
-            
+
             @include sm {
                 display: block;
             }
@@ -85,20 +85,18 @@
                     background-size: 100%;
                     -webkit-background-clip: text;
                     -moz-background-clip: text;
-                    -webkit-text-fill-color: transparent; 
+                    -webkit-text-fill-color: transparent;
                     -moz-text-fill-color: transparent;
                 }
 
                 .btn-icon-rounded {
                     background-color: darken($color: $accent2-color, $amount: 5);
                 }
-
-
             }
         }
 
         input[type="checkbox"] {
-            content: ' ';
+            content: " ";
             font-family: "fontello";
             text-align: center;
             border: 2px solid #eee;
@@ -130,7 +128,7 @@
             -webkit-border-radius: 4em;
             -ms-border-radius: 4em;
             border-radius: 4em;
-            margin:5px;
+            margin: 5px;
             outline: none;
         }
 
@@ -139,11 +137,9 @@
             color: white;
         }
 
-        input:hover[type="submit"]:enabled
-		{  
-			background-image: linear-gradient(to right, #2e5491, #882077);
+        input:hover[type="submit"]:enabled {
+            background-image: linear-gradient(to right, #2e5491, #882077);
         }
-        
 
         .cancel-button:hover {
             background-color: #313ea5 !important;
@@ -152,7 +148,7 @@
         .cancel-button {
             background-color: #4250b2 !important;
             background-image: none !important;
-            color:white !important;
+            color: white !important;
             outline: none;
         }
 
@@ -165,7 +161,7 @@
             color: white;
             font-weight: 600;
             outline: none;
-            text-align-last:center;
+            text-align-last: center;
             border: none;
 
             option {
@@ -179,67 +175,63 @@
             background-image: linear-gradient(to right, #1f4e98, #652fd0);
             border-radius: 10px;
             height: 45px;
-            text-align-last:center;
-            color:white;
+            text-align-last: center;
+            color: white;
             font-weight: 600;
             border: none;
         }
 
         .alert {
-            color:#ffffff;
-           background-image: linear-gradient(to right, #88316d, #9c2121);
+            color: #ffffff;
+            background-image: linear-gradient(to right, #88316d, #9c2121);
         }
 
         .alert-success {
             background-image: linear-gradient(to right, #17b857, #1c9988);
-            color:#ffffff;
+            color: #ffffff;
             font-weight: 600;
-         }
+        }
 
-         
         .alert-infos {
             background-image: linear-gradient(to right, #1f4e98, #652fd0);
-            color:#c24fe6;
+            color: #c24fe6;
             font-weight: 600;
-         }
-
+        }
 
         .content-sub {
             text-align: center;
         }
 
-        #clockdiv{
+        #clockdiv {
             font-family: sans-serif;
             display: inline-block;
             font-weight: 100;
             text-align: center;
             font-size: 30px;
-          }
-          
-          #clockdiv > div{
+        }
+
+        #clockdiv > div {
             padding: 10px;
             border-radius: 3px;
             background: #32395d;
             display: inline-block;
-          }
-          
-          #clockdiv div > span{
+        }
+
+        #clockdiv div > span {
             padding: 15px;
             border-radius: 3px;
             background-image: linear-gradient(to right, #296cd8, #d02fb6);
             display: inline-block;
-            color:white
-          }
+            color: white;
+        }
 
-          .smalltext{
+        .smalltext {
             padding-top: 5px;
             font-size: 16px;
-          }
+        }
 
-          .highcharts-root  {
+        .highcharts-root {
             background-image: linear-gradient(to right, #6b2e8a, #23457b) !important;
-          }
-          
+        }
     }
-
 }

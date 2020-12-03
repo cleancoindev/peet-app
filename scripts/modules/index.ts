@@ -5,6 +5,7 @@ import PayPeet from "./paypeet";
 import Home from "./home";
 import Exchanges from "./exchanges";
 import Tokens from "./tokens";
+import Staking from "./staking";
 
 export {
     Navbar,
@@ -13,5 +14,6 @@ export {
     PayPeet,
     Home,
     Exchanges,
-    Tokens
+    Tokens,
+    Staking
 }

@@ -4,12 +4,12 @@ import {
     BrowserRouter as Router,
     Link,
     withRouter
-  } from "react-router-dom";
-  import * as ConnectedReactRouter from 'connected-react-router'
+} from "react-router-dom";
+import * as ConnectedReactRouter from 'connected-react-router'
 import ReducersCombinedState from '../../reducers/types/reducers';
-import {AppState} from '../../reducers/types/app';
+import { AppState } from '../../reducers/types/app';
 import { requestSwitchSidebarOpen } from '../../actions/app';
-import {toastr} from 'react-redux-toastr';
+import { toastr } from 'react-redux-toastr';
 
 interface SidemenuProps {
     location: any,
@@ -26,6 +26,42 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
         return <div id="sidemenu" className={this.props.app.sidebarOpen ? "sidemenu-open" : ""}>
             <Router>
                 <div className="sidebar-container">
+                    <div className={"menu " + (location.pathname == "/staking" ? "" : "menu-closed")}>
+                        <h3>
+                            Staking Pools Available
+                        </h3>
+                        <div style={{ textAlign: "center", fontSize: "24px" }}>
+                            1
+                        </div>
+                        <h3>
+                            PTE available
+                        </h3>
+                        <div style={{ textAlign: "center", fontSize: "24px" }}>
+                            0
+                        </div>
+                        <h3>
+                            Locked PTE Amount
+                        </h3>
+                        <div style={{ textAlign: "center", fontSize: "24px" }}>
+                            0
+                        </div>
+                        <div className={"menu-item"} onClick={() => {
+
+                        }}>
+                            <div className="menu-item-icon">
+                                <i className="fas fa-arrow-right"></i>
+                            </div>
+                            <span>Depose Peet Tokens</span>
+                        </div>
+                        <div className={"menu-item"} onClick={() => {
+
+                        }}>
+                            <div className="menu-item-icon">
+                                <i className="fas fa-arrow-left"></i>
+                            </div>
+                            <span>Withdraw Peet Tokens</span>
+                        </div>
+                    </div>
                     <div className="menu">
                         <div className={"menu-item " + (location.pathname == "/" ? "active" : "")} onClick={() => {
                             this.props.push("/")
@@ -58,9 +94,10 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                             <div className="new-feature-icon">new</div>
                         </div>
 
-                        <div className="menu-item" onClick={() => {
-                                toastr.warning("Staking", "Coming soon, stay tuned on our social networks!")
-                            }}>
+                        <div className={"menu-item " + (location.pathname == "/staking" ? "active" : "")} onClick={() => {
+                            this.props.push("/staking")
+                            this.props.requestSwitchSidebarOpen();
+                        }}>
                             <div className="menu-item-icon">
                                 <i className="fas fa-boxes"></i>
                             </div>
@@ -74,7 +111,7 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                         </div>
                         <div className={"menu-item " + (location.pathname == "/tokens" ? "active" : "")} onClick={() => {
                             this.props.push("/tokens")
-                            
+
                             this.props.requestSwitchSidebarOpen();
                         }}>
                             <div className="menu-item-icon">
@@ -93,7 +130,7 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                         </div>
 
                     </div>
-                    
+
                     <div className="menu">
                         <div className="menu-item" onClick={() => window.open("https://peetdecentralized.finance/litepaper.pdf")}>
                             <div className="menu-item-icon">
@@ -115,6 +152,7 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                         </div>
                     </div>
                     <div id="copyright">© 2020 Peet DeFi. All rights reserved</div>
+                    <div id="copyright">Design by Yuki</div>
                 </div>
             </Router>
         </div>;
