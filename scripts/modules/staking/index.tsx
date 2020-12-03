@@ -1,35 +1,27 @@
 import * as React from 'react'
 import { connect } from "react-redux";
+import EthereumPoolViews from "./eth/poolsEth"
+import NeoPoolViews from "./neo/poolsNeo"
+
+enum ChainPools {
+    ETH = "eth",
+    NEO = "neo",
+    NULS = "nuls"
+}
 
 class Staking extends React.Component {
+    public state: any
     constructor(props: any) {
         super(props);
         this.state = {
-            pools: [
-                {
-                    name: "Unifi Protocol DAO (UNFI)",
-                    image: "https://bin.bnbstatic.com/static/images/coin/unfi.svg",
-                    stakeFrom: "pte",
-                    earnTo: "unfi",
-                    state: 1,
-                    blockchain: "ethereum",
-                    progress: 50,
-                    period: "30 day/s",
-                    endAt: "2020-12-14 01:00:00"
-                },
-                {
-                    name: "Hard Protocol (HARD)",
-                    image: "https://bin.bnbstatic.com/static/images/coin/hard.svg",
-                    stakeFrom: "pte",
-                    earnTo: "hard",
-                    state: 1,
-                    blockchain: "ethereum",
-                    progress: 92,
-                    period: "30 day/s",
-                    endAt: "2020-12-14 01:00:00"
-                }
-            ]
+            defaultChain: ChainPools.ETH
         }
+
+        this.onChangeChain = this.onChangeChain.bind(this)
+    }
+
+    onChangeChain(chain: ChainPools) {
+        this.setState({defaultChain: chain})
     }
 
     render() {
@@ -37,64 +29,44 @@ class Staking extends React.Component {
             <h1>Staking</h1>
 
             <div className="content-section">
-                {this.state.pools.map((e, i) => {
-                    return <div className="sub-section">
-                        <div style={{ display: "flex", flex: "1" }}>
-                            <div style={{ margin: "10px", display: "flex", flex: 1 }}>
-                                <img src={e.image}
-                                    style={{ borderRadius: "15px", width: "70px", marginLeft: "auto", marginRight: "auto" }} />
-                            </div>
-                            <div style={{ margin: "10px", flex: 2 }}>
-                                <div>
-                                    <h2 style={{ fontSize: "19px", marginLeft: "auto", marginRight: "auto" }}>
-                                        {e.name}
-                                    </h2>
-                                </div>
-                                <div>
-                                    <h2 style={{ fontSize: "13px", marginLeft: "auto", marginRight: "auto" }}>
-                                        Stake {e.stakeFrom.toUpperCase()}, Earn {e.earnTo.toUpperCase()}
-                                    </h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="btn-icon-rounded active" style={{
-                            display: "block", marginTop: "10px",
-                            width: "100%", textAlign: "center", minHeight: "45px", lineHeight: "45px", fontSize: "20px"
-                        }} onClick={() => { }}>
-                            Stake Now
-                        </div>
-                        <div style={{ marginTop: "20px" }}>
-                            <div style={{ display: "flex", marginBottom: "5px", fontSize: "18px" }}>
-                                <div style={{ flex: "1", alignSelf: "left", textAlign: "left" }}>
-                                    Reward Progress
-                                </div>
-                                <div style={{ flex: "1", alignSelf: "right", textAlign: "right" }}>
-                                    {e.progress}%
-                                </div>
-                            </div>
-                            <div className="p-progress-bar">
-                                <div className="inner" style={{ width: e.progress + "%" }}></div>
-                            </div>
-                            <div style={{ display: "flex", marginTop: "5px", fontSize: "18px" }}>
-                                <div style={{ flex: "1", alignSelf: "left", textAlign: "left" }}>
-                                    Farming Period
-                                </div>
-                                <div style={{ flex: "1", alignSelf: "right", textAlign: "right" }}>
-                                    {e.period}
-                                </div>
-                            </div>
-                            <div style={{ display: "flex", marginTop: "5px", fontSize: "18px" }}>
-                                <div style={{ flex: "1", alignSelf: "left", textAlign: "left" }}>
-                                    Farming end time
-                                </div>
-                                <div style={{ flex: "1", alignSelf: "right", textAlign: "right" }}>
-                                    {e.endAt}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                })}
+
+            <div className="content-section">
+                <div className="sub-section">
+                    <h2 style={{fontSize: "22px"}}>  Stake with PTE and earn on any blockchain. Feel the simplicity to use and embrace the defi world multi-chain. <br/><br/>Select your desired chain pools from the list</h2>
+                  
+                </div>
             </div>
+
+                <div className="sub-section col-6">
+                    <a href="#" onClick={() => { this.onChangeChain(ChainPools.ETH) }}>
+                        <div className="content-sub">
+                            <img src={require("../../../assets/ethereum-logo.png")} style={{borderRadius: "15px", width: "30px"}} />
+                        </div>
+                    </a>
+                </div>
+
+                <div className="sub-section col-6">
+                    <a href="#" onClick={() => { this.onChangeChain(ChainPools.NEO) }}>
+                        <div className="content-sub">
+                        <img src={require("../../../assets/neo.png")} style={{borderRadius: "15px", width: "50px"}} />              
+                        </div>
+                    </a>
+                </div>
+                
+                <div className="sub-section col-6">
+                    <a href="#" onClick={() => { this.onChangeChain(ChainPools.NULS) }}>
+                        <div className="content-sub">
+                            <img src={require("../../../assets/nuls.svg")} style={{borderRadius: "15px", width: "125px"}} />            
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            {(
+             (this.state.defaultChain === ChainPools.ETH && <EthereumPoolViews/>)
+             || (this.state.defaultChain === ChainPools.NEO && <NeoPoolViews/>)
+            )}
+
         </div>;
     }
 }

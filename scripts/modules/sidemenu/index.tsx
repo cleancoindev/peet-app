@@ -152,7 +152,7 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                         </div>
                     </div>
                     <div id="copyright">© 2020 Peet DeFi. All rights reserved</div>
-                    <div id="copyright">Design by Yuki</div>
+                    <div id="copyright">Designed by Peet Core Team.</div>
                 </div>
             </Router>
         </div>;
