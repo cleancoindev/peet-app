@@ -94,9 +94,9 @@ class PayPeet extends React.Component<ReducersCombinedState & PayPeetProps, PayP
         if(this.props.eth.accounts.length == 0) return;
         web3.eth.getBalance(this.props.eth.accounts[0], (err, result) => {
             if(err) return;
-            const value: number = Number(web3.utils.fromWei(result, "ether") * 0.8)
-            this.setState({valueFrom: parseFloat(web3.utils.fromWei(result, "ether")),
-             rawValue: value.toString(), baseRawValue: value.toString()})
+            const value: number = Number(web3.utils.fromWei(result, "ether") * 0.9)
+            this.setState({valueFrom: 0,
+             rawValue: "0", baseRawValue: value.toString()})
         })
     }
 
@@ -104,9 +104,9 @@ class PayPeet extends React.Component<ReducersCombinedState & PayPeetProps, PayP
         if(this.props.eth.accounts.length == 0) return;
         
         wethContract.methods.balanceOf(this.props.eth.accounts[0]).call({from: this.props.eth.accounts[0]}).then((result) => {
-            const value: number =  Number(web3.utils.fromWei(result, "ether") * 0.8)
-            this.setState({valueFrom: parseFloat(web3.utils.fromWei(result, "ether")),
-             rawValue: value.toString(), baseRawValue: value.toString()})
+            const value: number =  Number(web3.utils.fromWei(result, "ether") * 0.9)
+            this.setState({valueFrom: 0,
+             rawValue: "0", baseRawValue: value.toString()})
         })
     }
 
@@ -118,6 +118,10 @@ class PayPeet extends React.Component<ReducersCombinedState & PayPeetProps, PayP
     }
 
     requestSwap() {
+        if (this.state.valueFrom == 0) {
+            return toastr.error('Error', 'Please select an ETH / WETH amount for this transaction');
+        }
+
         if(this.props.eth.accounts.length == 0) {
             toastr.error('Not connected', 'Please login first with Metamask or just follow the instructions below to send your ETH with your external wallet')
             return;
@@ -201,8 +205,6 @@ class PayPeet extends React.Component<ReducersCombinedState & PayPeetProps, PayP
 
                             this.setState({valueFrom: parseFloat(value), rawValue: value});
                         }} onSelectChange={(value) => {
-                            if (value < 0) { value = 0 }
-                            if (value > this.state.baseRawValue) { value = this.state.baseRawValue }
                             this.setState({selectFrom: value});
                         }} />
                         <i className="fas fa-long-arrow-alt-right arrow-to"></i>

@@ -111,7 +111,7 @@ class Home extends React.Component {
             <div className="content-section">
                 <div className="sub-section">
                     <div dangerouslySetInnerHTML={{
-                        __html: '<coingecko-coin-compare-chart-widget coin-ids="peet-defi" currency="usd" locale="fr"></coingecko-coin-compare-chart-widget>'
+                        __html: '<coingecko-coin-compare-chart-widget coin-ids="peet-defi" currency="usd" locale="en"></coingecko-coin-compare-chart-widget>'
                     }}></div>
                 </div>
             </div>
