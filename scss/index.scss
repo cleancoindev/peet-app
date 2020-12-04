@@ -110,5 +110,23 @@ body {
 .fade-exit {
     display: none;
     opacity: 0;
-    transition: opacity 250ms ease-in;
+    transition: opacity 350ms ease-in;
+}
+
+.scale-enter {
+    opacity: 0;
+    transform: scale(0.7);
+}
+
+.scale-enter.scale-enter-active {
+    transform: scale(1);
+    opacity: 1;
+    transition: 350ms ease-in;
+}
+
+.scale-exit {
+    display: none;
+    transform: scale(0.7);
+    opacity: 0;
+    transition: 350ms ease-in;
 }

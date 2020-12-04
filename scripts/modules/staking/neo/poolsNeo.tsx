@@ -60,7 +60,7 @@ class NeoPoolsView extends React.Component {
                             display: "block", marginTop: "10px",
                             width: "100%", textAlign: "center", minHeight: "45px", lineHeight: "45px", fontSize: "20px"
                         }} onClick={() => { }}>
-                            Stake Now
+                            More Details
                         </div>
                         <div style={{ marginTop: "20px" }}>
                             <div style={{ display: "flex", marginBottom: "5px", fontSize: "18px" }}>

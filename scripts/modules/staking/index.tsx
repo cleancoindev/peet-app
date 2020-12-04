@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { connect } from "react-redux";
 import EthereumPoolViews from "./eth/poolsEth"
-import NeoPoolViews from "./neo/poolsNeo"
+import NeoPoolViews from "./neo/poolsNeo";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 enum ChainPools {
     ETH = "eth",
@@ -21,7 +22,7 @@ class Staking extends React.Component {
     }
 
     onChangeChain(chain: ChainPools) {
-        this.setState({defaultChain: chain})
+        this.setState({ defaultChain: chain })
     }
 
     render() {
@@ -30,43 +31,51 @@ class Staking extends React.Component {
 
             <div className="content-section">
 
-            <div className="content-section">
-                <div className="sub-section">
-                    <h2 style={{fontSize: "22px"}}>  Stake with PTE and earn on any blockchain. Feel the simplicity to use and embrace the defi world multi-chain. <br/><br/>Select your desired chain pools from the list</h2>
-                  
+                <div className="content-section" style={{ marginBottom: "0px" }}>
+                    <div className="sub-section">
+                        <h2 style={{ fontSize: "22px" }}>  Stake with PTE and earn on any blockchain. Feel the simplicity to use and embrace the defi world multi-chain. <br /><br />Select your desired chain pools from the list</h2>
+
+                    </div>
+                </div>
+
+                <div className="sub-section col-6-md col-12-sm content-sub-staking">
+                    <div onClick={() => { this.onChangeChain(ChainPools.ETH) }}>
+                        <div className="content-sub">
+                            <img src={require("../../../assets/ethereum-logo.png")} style={{ borderRadius: "15px", width: "30px" }} />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="sub-section col-6-md col-12-sm content-sub-staking">
+                    <div onClick={() => { this.onChangeChain(ChainPools.NEO) }}>
+                        <div className="content-sub">
+                            <img src={require("../../../assets/neo.png")} style={{ borderRadius: "15px", width: "50px" }} />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="sub-section col-6-md col-12-sm content-sub-staking">
+                    <div onClick={() => { this.onChangeChain(ChainPools.NULS) }}>
+                        <div className="content-sub">
+                            <img src={require("../../../assets/nuls.svg")} style={{ borderRadius: "15px", width: "125px" }} />
+                        </div>
+                    </div>
                 </div>
             </div>
 
-                <div className="sub-section col-6">
-                    <a href="#" onClick={() => { this.onChangeChain(ChainPools.ETH) }}>
-                        <div className="content-sub content-sub-staking">
-                            <img src={require("../../../assets/ethereum-logo.png")} style={{borderRadius: "15px", width: "30px"}} />
-                        </div>
-                    </a>
-                </div>
-
-                <div className="sub-section col-6">
-                    <a href="#" onClick={() => { this.onChangeChain(ChainPools.NEO) }}>
-                        <div className="content-sub content-sub-staking">
-                        <img src={require("../../../assets/neo.png")} style={{borderRadius: "15px", width: "50px"}} />              
-                        </div>
-                    </a>
-                </div>
-                
-                <div className="sub-section col-6">
-                    <a href="#" onClick={() => { this.onChangeChain(ChainPools.NULS) }}>
-                        <div className="content-sub content-sub-staking">
-                            <img src={require("../../../assets/nuls.svg")} style={{borderRadius: "15px", width: "125px"}} />            
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            {(
-             (this.state.defaultChain === ChainPools.ETH && <EthereumPoolViews/>)
-             || (this.state.defaultChain === ChainPools.NEO && <NeoPoolViews/>)
-            )}
-
+            <TransitionGroup>
+                <CSSTransition
+                        key={this.state.defaultChain}
+                        classNames="scale"
+                        timeout={350}>
+                    <div>
+                        {(
+                            (this.state.defaultChain === ChainPools.ETH && <EthereumPoolViews />)
+                            || (this.state.defaultChain === ChainPools.NEO && <NeoPoolViews />)
+                        )}
+                    </div>
+                </CSSTransition>
+            </TransitionGroup>
         </div>;
     }
 }

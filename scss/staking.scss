@@ -12,3 +12,20 @@
         background-image: linear-gradient(to right, #9a03e6, #0062ff) !important;
     }
 }
+
+.content-sub-staking {
+    cursor: pointer;
+    transition: 0.3s;
+
+    img {
+        transition: 0.2s;
+    }
+
+    &:hover {
+        background-image: linear-gradient(to right, #6b2e8a, #23457b) !important;
+
+        img {
+            transform: scale(1.2);
+        }
+    }
+}
