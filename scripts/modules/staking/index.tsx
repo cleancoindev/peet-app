@@ -15,7 +15,7 @@ class Staking extends React.Component {
     constructor(props: any) {
         super(props);
         this.state = {
-            defaultChain: undefined
+            defaultChain: ChainPools.ETH
         }
 
         this.onChangeChain = this.onChangeChain.bind(this)
@@ -33,12 +33,13 @@ class Staking extends React.Component {
 
                 <div className="content-section" style={{ marginBottom: "0px" }}>
                     <div className="sub-section">
-                        <h2 style={{ fontSize: "22px" }}>  Stake with PTE and earn on any blockchain. Feel the simplicity to use and embrace the defi world multi-chain. <br /><br />Select your desired chain pools from the list</h2>
+                        <h2 style={{ fontSize: "22px" }}>  Stake with Peet and earn on any blockchain. Feel the simplicity to use and embrace the defi world multi-chain. <br /><br />Select your desired chain pools from the list</h2>
 
                     </div>
                 </div>
 
-                <div className="sub-section col-6-md col-12-sm content-sub-staking">
+
+                <div className={`sub-section col-6-md col-12-sm content-sub-staking ${(this.state.defaultChain === ChainPools.ETH ? 'active-sub-staking' : '')}`}>
                     <div onClick={() => { this.onChangeChain(ChainPools.ETH) }}>
                         <div className="content-sub">
                             <img src={require("../../../assets/ethereum-logo.png")} style={{ borderRadius: "15px", width: "30px" }} />
@@ -46,7 +47,8 @@ class Staking extends React.Component {
                     </div>
                 </div>
 
-                <div className="sub-section col-6-md col-12-sm content-sub-staking">
+              
+                <div className={`sub-section col-6-md col-12-sm content-sub-staking ${(this.state.defaultChain === ChainPools.NEO ? 'active-sub-staking' : '')}`}>
                     <div onClick={() => { this.onChangeChain(ChainPools.NEO) }}>
                         <div className="content-sub">
                             <img src={require("../../../assets/neo.png")} style={{ borderRadius: "15px", width: "50px" }} />
@@ -54,7 +56,8 @@ class Staking extends React.Component {
                     </div>
                 </div>
 
-                <div className="sub-section col-6-md col-12-sm content-sub-staking">
+
+                <div className={`sub-section col-6-md col-12-sm content-sub-staking ${(this.state.defaultChain === ChainPools.NULS ? 'active-sub-staking' : '')}`}>
                     <div onClick={() => { this.onChangeChain(ChainPools.NULS) }}>
                         <div className="content-sub">
                             <img src={require("../../../assets/nuls.svg")} style={{ borderRadius: "15px", width: "125px" }} />

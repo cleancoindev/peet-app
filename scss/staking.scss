@@ -29,3 +29,13 @@
         }
     }
 }
+
+.active-sub-staking {
+    background-image: linear-gradient(to right, #6b2e8a, #23457b) !important;
+}
+
+.staking-button {
+    &:hover {
+        background-image: linear-gradient(to right, #6b2e8a, #23457b) !important;
+    }
+}
