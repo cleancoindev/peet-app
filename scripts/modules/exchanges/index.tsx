@@ -25,6 +25,18 @@ class Exchanges extends React.Component {
                 </div>
 
                 <div className="sub-section">
+                    <h2>Coinpark</h2>
+                    <div style={{textAlign: "center", margin: "10px"}}>
+                        <img src={require("../../../assets/coinpark.jpg")} style={{borderRadius: "15px", width: "112px"}} />
+                    </div>
+                    <div style={{ textAlign: "center", marginTop: "15px" }}>
+                        <div className="btn-icon-rounded" onClick={() => {}}>
+                            <a target="_blank" href="https://www.coinpark.com/fullExchange?coinPair=PTE_USDT"><i className="fas fa-sign-in-alt"></i> Go to CoinPark</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="sub-section">
                     <h2>ForkDelta</h2>
                     <div style={{textAlign: "center", margin: "10px"}}>
                         <img src={require("../../../assets/forkdelta.png")} style={{borderRadius: "15px", width: "230px"}} />
