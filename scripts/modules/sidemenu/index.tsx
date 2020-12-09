@@ -31,7 +31,7 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                             Staking Pools Available
                         </h3>
                         <div style={{ textAlign: "center", fontSize: "24px" }}>
-                            1
+                            5
                         </div>
                         <h3>
                             PTE available
@@ -51,7 +51,7 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                             <div className="menu-item-icon">
                                 <i className="fas fa-arrow-right"></i>
                             </div>
-                            <span>Depose Peet Tokens</span>
+                            <span>Deposit PTE Tokens</span>
                         </div>
                         <div className={"menu-item"} onClick={() => {
 
@@ -59,7 +59,7 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                             <div className="menu-item-icon">
                                 <i className="fas fa-arrow-left"></i>
                             </div>
-                            <span>Withdraw Peet Tokens</span>
+                            <span>Withdraw PTE Tokens</span>
                         </div>
                     </div>
                     <div className="menu">

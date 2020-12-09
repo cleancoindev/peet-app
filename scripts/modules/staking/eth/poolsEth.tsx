@@ -1,33 +1,47 @@
 import * as React from 'react'
 import { connect } from "react-redux";
+import {toastr} from 'react-redux-toastr';
+import * as ConnectedReactRouter from 'connected-react-router';
+import ReducersCombinedState from '../../../reducers/types/reducers';
 
-class EthereumPoolsView extends React.Component {
+class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
     public state: any
-    constructor(props: any) {
+    constructor(props: ReducersCombinedState) {
         super(props);
         this.state = {
             pools: [
                 {
-                    name: "Unifi Protocol DAO (UNFI)",
-                    image: "https://bin.bnbstatic.com/static/images/coin/unfi.svg",
-                    stakeFrom: "pte",
-                    earnTo: "unfi",
+                    name: "Peet Defi",
+                    image: "https://s2.coinmarketcap.com/static/img/coins/128x128/7659.png",
+                    stakeFrom: "psk",
+                    earnTo: "PTE",
                     state: 1,
                     blockchain: "ethereum",
-                    progress: 50,
+                    progress: 0,
                     period: "30 day/s",
-                    endAt: "2020-12-14 01:00:00"
+                    endAt: "2020-12-31 01:00:00"
                 },
                 {
-                    name: "Hard Protocol (HARD)",
-                    image: "https://bin.bnbstatic.com/static/images/coin/hard.svg",
+                    name: "Compound Protocol",
+                    image: "https://s2.coinmarketcap.com/static/img/coins/128x128/5692.png",
                     stakeFrom: "pte",
-                    earnTo: "hard",
+                    earnTo: "DAI",
                     state: 1,
                     blockchain: "ethereum",
-                    progress: 92,
+                    progress: 0,
                     period: "30 day/s",
-                    endAt: "2020-12-14 01:00:00"
+                    endAt: "2020-12-31 01:00:00"
+                },
+                {
+                    name: "Harvest Protocol",
+                    image: "https://harvest.finance/static/media/tractor.53d392b6.gif",
+                    stakeFrom: "pte",
+                    earnTo: "ETH",
+                    state: 1,
+                    blockchain: "ethereum",
+                    progress: 0,
+                    period: "30 day/s",
+                    endAt: "2020-12-31 01:00:00"
                 }
             ]
         }
@@ -37,29 +51,31 @@ class EthereumPoolsView extends React.Component {
         return <div>
             <div className="content-section">
                 {this.state.pools.map((e, i) => {
-                    return <div className="sub-section">
+                    return <div className="sub-section col-6">
                         <div style={{ display: "flex", flex: "1" }}>
                             <div style={{ margin: "10px", display: "flex", flex: 1 }}>
                                 <img src={e.image}
-                                    style={{ borderRadius: "15px", width: "70px", marginLeft: "auto", marginRight: "auto" }} />
+                                    style={{ borderRadius: "15px", width: "85px", marginLeft: "auto", marginRight: "auto" }} />
                             </div>
                             <div style={{ margin: "10px", flex: 2 }}>
                                 <div>
                                     <h2 style={{ fontSize: "19px", marginLeft: "auto", marginRight: "auto" }}>
-                                        {e.name}
+                                    Stake {e.stakeFrom.toUpperCase()}, Earn {e.earnTo.toUpperCase()}
                                     </h2>
                                 </div>
                                 <div>
                                     <h2 style={{ fontSize: "13px", marginLeft: "auto", marginRight: "auto" }}>
-                                        Stake {e.stakeFrom.toUpperCase()}, Earn {e.earnTo.toUpperCase()}
+                                        {e.name}  
                                     </h2>
                                 </div>
                             </div>
                         </div>
-                        <div className="btn-icon-rounded active" style={{
+                        <div className="btn-icon-rounded active staking-button" style={{
                             display: "block", marginTop: "10px",
                             width: "100%", textAlign: "center", minHeight: "45px", lineHeight: "45px", fontSize: "20px"
-                        }} onClick={() => { }}>
+                        }} onClick={() => {  
+                            this.props.push("/staking/x")
+                        }}>
                             More Details
                         </div>
                         <div style={{ marginTop: "20px" }}>
@@ -101,7 +117,9 @@ class EthereumPoolsView extends React.Component {
 export default connect((state: any, ownProps: any) => {
     return {}
 }, (dispatch) => {
-    return {
-
+    return {     
+        push: (route) => {
+            dispatch(ConnectedReactRouter.push(route));
+        },
     }
 })(EthereumPoolsView)

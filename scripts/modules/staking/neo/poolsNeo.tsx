@@ -1,33 +1,37 @@
 import * as React from 'react'
 import { connect } from "react-redux";
+import {toastr} from 'react-redux-toastr';
+import * as ConnectedReactRouter from 'connected-react-router';
+import ReducersCombinedState from '../../../reducers/types/reducers';
 
-class NeoPoolsView extends React.Component {
+class NeoPoolsView extends React.Component<ReducersCombinedState, {}>  {
     public state: any
-    constructor(props: any) {
+
+    constructor(props: ReducersCombinedState) {
         super(props);
         this.state = {
             pools: [
                 {
-                    name: "Flamingo Pool",
-                    image: "https://bin.bnbstatic.com/static/images/coin/unfi.svg",
-                    stakeFrom: "pte",
-                    earnTo: "unfi",
+                    name: "Flamingo - FLM-nNEO",
+                    image: "https://flamingo.finance/img/logo.666871d1.svg",
+                    stakeFrom: "PTE",
+                    earnTo: "FLM",
                     state: 1,
                     blockchain: "neo",
-                    progress: 50,
+                    progress: 0,
                     period: "30 day/s",
-                    endAt: "2020-12-14 01:00:00"
+                    endAt: "2020-12-31 01:00:00"
                 },
                 {
-                    name: "Hard Protocol (HARD)",
-                    image: "https://bin.bnbstatic.com/static/images/coin/hard.svg",
-                    stakeFrom: "pte",
-                    earnTo: "hard",
+                    name: "Flamincome",
+                    image: "https://avatars0.githubusercontent.com/u/70206242?s=200&v=4",
+                    stakeFrom: "PTE",
+                    earnTo: "USDT",
                     state: 1,
                     blockchain: "neo",
-                    progress: 92,
+                    progress: 0,
                     period: "30 day/s",
-                    endAt: "2020-12-14 01:00:00"
+                    endAt: "2020-12-31 01:00:00"
                 }
             ]
         }
@@ -41,25 +45,28 @@ class NeoPoolsView extends React.Component {
                         <div style={{ display: "flex", flex: "1" }}>
                             <div style={{ margin: "10px", display: "flex", flex: 1 }}>
                                 <img src={e.image}
-                                    style={{ borderRadius: "15px", width: "70px", marginLeft: "auto", marginRight: "auto" }} />
+                                    style={{ borderRadius: "15px", width: "50px", marginLeft: "auto", marginRight: "auto" }} />
                             </div>
                             <div style={{ margin: "10px", flex: 2 }}>
                                 <div>
                                     <h2 style={{ fontSize: "19px", marginLeft: "auto", marginRight: "auto" }}>
-                                        {e.name}
+                                    Stake {e.stakeFrom}, Earn {e.earnTo.toUpperCase()}
                                     </h2>
                                 </div>
                                 <div>
                                     <h2 style={{ fontSize: "13px", marginLeft: "auto", marginRight: "auto" }}>
-                                        Stake {e.stakeFrom.toUpperCase()}, Earn {e.earnTo.toUpperCase()}
+                                       
+                                        {e.name}
                                     </h2>
                                 </div>
                             </div>
                         </div>
-                        <div className="btn-icon-rounded active" style={{
+                        <div className="btn-icon-rounded active staking-button" style={{
                             display: "block", marginTop: "10px",
                             width: "100%", textAlign: "center", minHeight: "45px", lineHeight: "45px", fontSize: "20px"
-                        }} onClick={() => { }}>
+                        }} onClick={() => { 
+                            this.props.push("/staking/x")
+                        }}>
                             More Details
                         </div>
                         <div style={{ marginTop: "20px" }}>
@@ -102,6 +109,8 @@ export default connect((state: any, ownProps: any) => {
     return {}
 }, (dispatch) => {
     return {
-
+        push: (route) => {
+            dispatch(ConnectedReactRouter.push(route));
+        },
     }
 })(NeoPoolsView)
