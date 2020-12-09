@@ -7,7 +7,7 @@
 
 This repo is the source code of the Peet Dapp.  
 This interface is written in Typescript/SCSS with React/Redux.  
-The Dapp allow you to be connected with Metamasj and Neoline(soon).
+The Dapp allow you to be connected with Metamask and Neoline(soon).
 
 ## Install
 You need to have Node.JS v >= 12, Typescript and Parcel installed on your environment
