@@ -75,7 +75,7 @@ class StakingDetails extends React.Component {
                                 Earn
                             </div>
                             <div>
-                                <i className="fas fa-long-arrow-alt-right arrow-to rotated" style={{ transform: "rotate(180deg)" }}></i>
+                                <i className="fas fa-long-arrow-alt-right arrow-to" style={{ transform: "rotate(180deg)" }}></i>
                             </div>
                             <div>
                                 <span>FLM</span>
@@ -90,7 +90,7 @@ class StakingDetails extends React.Component {
 
                     <div className="content-section" style={{ margin: "10px", padding: "20px", display: "block" }}>
                         <div style={{ marginLeft: "auto", marginRight: "auto" }}>
-                            <h2>PTE locked</h2>
+                            <h2>PTE pooled</h2>
                         </div>
                         <div style={{ marginLeft: "auto", marginRight: "auto", textAlign: "center" }}>
                             <h3>
@@ -135,7 +135,7 @@ class StakingDetails extends React.Component {
                         <div className="select-text-combo" style={{ display: "block", width: "100%", marginBottom: "10px" }}>
                             <div className="select-container" style={{ display: "flex" }}>
                                 <div className="current-select" style={{ flex: 1 }} onClick={() => this.setState({ selectState: !this.state.selectState })}>
-                                    <span style={{ marginLeft: 0 }}>Amount to lock</span>
+                                    <span style={{ marginLeft: 0 }}>Amount to pool</span>
                                 </div>
                                 <input style={{ flex: 2, minWidth: "auto" }} type="number" placeholder="0.00" readOnly />
                             </div>
@@ -144,7 +144,7 @@ class StakingDetails extends React.Component {
                         <div className="select-text-combo" style={{ display: "block", width: "100%" }}>
                             <div className="select-container" style={{ display: "flex" }}>
                                 <div className="current-select" style={{ flex: 1 }} onClick={() => this.setState({ selectState: !this.state.selectState })}>
-                                    <span style={{ marginLeft: 0 }}>Days to lock</span>
+                                    <span style={{ marginLeft: 0 }}>Staking period</span>
                                 </div>
                                 <input style={{ flex: 2, minWidth: "auto" }} type="number" placeholder="0" readOnly />
                             </div>
@@ -152,7 +152,7 @@ class StakingDetails extends React.Component {
 
                         <div style={{ textAlign: "center", marginTop: "10px", display: "block", width: "100%" }}>
                             <div className="btn-icon-rounded" style={{ display: "block" }} onClick={() => { }}>
-                                <i className="fas fa-lock"></i> Lock my assets
+                                <i className="fas fa-lock"></i> Pool my assets
                             </div>
                         </div>
                     </div>
