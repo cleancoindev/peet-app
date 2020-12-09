@@ -6,6 +6,7 @@ import Home from "./home";
 import Exchanges from "./exchanges";
 import Tokens from "./tokens";
 import Staking from "./staking";
+import StakingDetails from "./staking/stakingDetails";
 
 export {
     Navbar,
@@ -15,5 +16,6 @@ export {
     Home,
     Exchanges,
     Tokens,
-    Staking
+    Staking,
+    StakingDetails
 }

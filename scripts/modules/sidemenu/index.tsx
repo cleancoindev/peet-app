@@ -26,7 +26,7 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
         return <div id="sidemenu" className={this.props.app.sidebarOpen ? "sidemenu-open" : ""}>
             <Router>
                 <div className="sidebar-container">
-                    <div className={"menu " + (location.pathname == "/staking" ? "" : "menu-closed")}>
+                    <div className={"menu " + (location.pathname.startsWith("/staking") ? "" : "menu-closed")}>
                         <h3>
                             Staking Pools Available
                         </h3>

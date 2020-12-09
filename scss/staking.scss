@@ -29,3 +29,65 @@
         }
     }
 }
+
+.two-col-md {
+    display: flex;
+    align-items: flex-start;
+    
+    @include sm {
+        display: block;
+    }
+}
+
+.stacking-details {
+    .pool-logo {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 100px;
+        border-radius: 100px;
+        margin-top: 20px;
+    }
+
+    .pool-name {
+        display: block;
+        margin-top: 5px;
+        @include gradient-text;
+        font-weight: 600;
+        font-size: 30px;
+    }
+
+    .sub-text {
+        font-size: 14px;
+        color: white;
+        font-weight: normal;
+        display: flex;
+
+        div {
+            flex: 1;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            vertical-align: middle;
+            line-height: 45px;
+        }
+
+        .arrow-to {
+            animation-duration: 1.5s;
+            animation-name: slide-infinite;
+            animation-iteration-count: infinite;
+            animation-direction:alternate;
+            margin: 0;
+
+            &.rotated {
+                animation-name: slide-infinite-180;
+            }
+        }
+
+        span {
+            @include gradient-text;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            vertical-align: middle;
+        }
+    }
+}

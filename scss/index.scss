@@ -34,7 +34,7 @@ body {
     a {
         color: lighten($color: $accent2-color, $amount: 30);
     }
-    
+
     &:hover {
         background-color: darken($color: $accent2-color, $amount: 10);
     }
@@ -129,4 +129,26 @@ body {
     transform: scale(0.7);
     opacity: 0;
     transition: 350ms ease-in;
+}
+
+@keyframes slide-infinite {
+    from {
+        transform: translateX(-15px) scaleX(1);
+    }
+
+    to {
+        transform: translateX(15px);
+        text-shadow: rgba(230,95,230,0.5) 0px 0px 15px;
+    }
+}
+
+@keyframes slide-infinite-180 {
+    from {
+        transform: translateX(15px) rotate(180deg);
+    }
+
+    to {
+        transform: translateX(-15px) rotate(180deg);
+        text-shadow: rgba(230,95,230,0.5) 0px 0px 15px;
+    }
 }

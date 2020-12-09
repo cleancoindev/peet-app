@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { connect } from "react-redux";
 import { AppState } from './interfaces/props';
-import { Navbar, Sidemenu, ChainBridge, PayPeet, Home, Exchanges, Tokens, Staking } from "./modules";
+import { Navbar, Sidemenu, ChainBridge, PayPeet, Home, Exchanges, Tokens, Staking, StakingDetails } from "./modules";
 import {
     BrowserRouter as Router,
     Switch,
@@ -77,8 +77,11 @@ class App extends React.Component<AppState & AppProps, {}> {
                                 <Route path="/exchanges">
                                     <Exchanges />
                                 </Route>
-                                <Route path="/staking">
+                                <Route exact path="/staking">
                                     <Staking />
+                                </Route>
+                                <Route path="/staking/:poolId">
+                                    <StakingDetails />
                                 </Route>
                                 <Route exact path="/">
                                     <Home />
