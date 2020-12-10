@@ -14,6 +14,7 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 import ReduxToastr from 'react-redux-toastr'
 import { requestLogin, requestLogout } from './actions/eth';
 import { bindNeoline } from "./actions/neo";
+import { neoline } from "./store";
 
 interface AppProps {
     bindNeoline: Function
@@ -38,8 +39,13 @@ class App extends React.Component<AppState & AppProps, {}> {
             })
         }
 
-        // Bind Neo
-        this.props.bindNeoline();
+        window.addEventListener('NEOLine.NEO.EVENT.READY', () => {
+            setTimeout(() => {
+                if(window.sessionStorage.getItem("neolineConnected") == "true") {
+                    this.props.bindNeoline();
+                }
+            }, 500);
+        });
     }
 
     render() {

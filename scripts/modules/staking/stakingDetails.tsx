@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { Line } from 'react-chartjs-2';
 import DataTable, { createTheme } from 'react-data-table-component';
+import {toastr} from 'react-redux-toastr';
 
 createTheme('peet-table', {
     text: {
@@ -46,6 +47,14 @@ class StakingDetails extends React.Component {
                 ]
             }
         }
+    }
+
+    componentDidMount() {
+        toastr.info('Staking', 
+            "This is a demonstration page for the future staking system, you can't interact with the page yet, stay tuned on our social networks",
+            {
+                timeOut: 10000
+            });
     }
 
     render() {

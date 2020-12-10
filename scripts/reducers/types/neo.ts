@@ -1,10 +1,12 @@
 interface BindNeolineAction {
     type: string,
-    neoline: any
+    address: string
+    network: string
 }
 
 interface NeoState {
-    neoline: any
+    address: string
+    network: string
 }
 
 export {

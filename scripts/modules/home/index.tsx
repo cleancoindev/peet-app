@@ -89,7 +89,7 @@ class Home extends React.Component {
                 <div className="sub-section">
                     <h2 style={{fontSize: "18px"}}>Market Cap</h2>
                     <i className="fas fa-chart-pie sub-section-big-icon" style={{fontSize: "60px", margin: "5px"}}></i>
-                    <h2>{this.state.supply / 1000000}M</h2>
+                    <h2>{(this.state.supply / 1000000).toFixed(3)}M</h2>
                 </div>
                 <div className="sub-section">
                     <h2 style={{fontSize: "18px"}}>Peet Price</h2>

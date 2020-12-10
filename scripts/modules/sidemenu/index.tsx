@@ -39,28 +39,6 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                         <div style={{ textAlign: "center", fontSize: "24px" }}>
                             0
                         </div>
-                        <h3>
-                            Locked PTE Amount
-                        </h3>
-                        <div style={{ textAlign: "center", fontSize: "24px" }}>
-                            0
-                        </div>
-                        <div className={"menu-item"} onClick={() => {
-
-                        }}>
-                            <div className="menu-item-icon">
-                                <i className="fas fa-arrow-right"></i>
-                            </div>
-                            <span>Deposit PTE Tokens</span>
-                        </div>
-                        <div className={"menu-item"} onClick={() => {
-
-                        }}>
-                            <div className="menu-item-icon">
-                                <i className="fas fa-arrow-left"></i>
-                            </div>
-                            <span>Withdraw PTE Tokens</span>
-                        </div>
                     </div>
                     <div className="menu">
                         <div className={"menu-item " + (location.pathname == "/" ? "active" : "")} onClick={() => {

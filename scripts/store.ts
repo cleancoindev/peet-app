@@ -29,6 +29,13 @@ export const peetPayContract = new web3.eth.Contract(abi.peetPay as any, Env().P
 let currentStore: Store = null;
 export { currentStore };
 
+let neoline: any = null;
+export { neoline };
+
+window.addEventListener('NEOLine.NEO.EVENT.READY', () => {
+    neoline = new NEOLine.Init();
+});
+
 export const configureStore = (): Store => {
     currentStore = createStore(combineReducers(
         {
