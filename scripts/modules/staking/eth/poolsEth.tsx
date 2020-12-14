@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import {toastr} from 'react-redux-toastr';
 import * as ConnectedReactRouter from 'connected-react-router';
 import ReducersCombinedState from '../../../reducers/types/reducers';
+import StakingPoolProvider from "../../../providers/stakingPoolProvider"
+import StakingPool from '../../../providers/models/staking/pool';
 
 class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
     public state: any
@@ -47,11 +49,20 @@ class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
         }
     }
 
+    componentDidMount() {
+        this.fetchPools(true)
+    }
+
+    async fetchPools(live: boolean) {
+        const pools: StakingPool[] = await StakingPoolProvider.fetchLiveEthPools()
+        console.log(pools)
+    }
+
     render() {
         return <div>
             <div className="content-section">
                 {this.state.pools.map((e, i) => {
-                    return <div className="sub-section col-6">
+                    return <div key={`pool-${i}`} className="sub-section col-sm-12">
                         <div style={{ display: "flex", flex: "1" }}>
                             <div style={{ margin: "10px", display: "flex", flex: 1 }}>
                                 <img src={e.image}

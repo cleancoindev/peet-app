@@ -1,7 +1,7 @@
 import Env from "../env";
-import CancelSwapRequest from "./models/cancelSwapRequest";
-import FetchSwapRequest from "./models/fetchSwapRequest";
-import { InitSwapRequest } from "./models/initSwapRequest";
+import CancelSwapRequest from "./models/oracle/cancelSwapRequest";
+import FetchSwapRequest from "./models/oracle/fetchSwapRequest";
+import { InitSwapRequest } from "./models/oracle/initSwapRequest";
 
 export default class PeetOracleProvider {
     private static baseUrl: string | undefined = Env().ORACLE_PEET_URL
