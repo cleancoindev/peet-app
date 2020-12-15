@@ -86,8 +86,7 @@ class App extends React.Component<AppState & AppProps, {}> {
                                 <Route exact path="/staking">
                                     <Staking />
                                 </Route>
-                                <Route path="/staking/:poolId">
-                                    <StakingDetails />
+                                <Route path="/staking/:poolId" component={StakingDetails}>
                                 </Route>
                                 <Route exact path="/">
                                     <Home />

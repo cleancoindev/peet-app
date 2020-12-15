@@ -19,6 +19,29 @@ export default class StakingPoolProvider {
         } catch (e) { return 0}
     }
 
+    static async fetchPool(hash: string) : Promise<StakingPool> {
+            const poolRaw: any = await EthHelper.callOnContract(ethStakingContract.methods.fetchPool(hash), undefined)
+            const inputAssetContract = getErc20Contract(poolRaw[1])
+            const outputAssetContract = getErc20Contract(poolRaw[2])
+
+            const symbolInput: string = await EthHelper.callOnContract(inputAssetContract.methods.symbol(), undefined)
+            const symbolOutput: string = await EthHelper.callOnContract(outputAssetContract.methods.symbol(), undefined)
+
+            return {
+                hashPool: hash,
+                name: web3.utils.toAscii(poolRaw[0]).replace(/[^0-9a-z ]/gi, ''),
+                inputAsset: poolRaw[1],
+                ouputAsset: poolRaw[2],
+                startDate: moment.unix(poolRaw[6]).toDate(),
+                endDate: moment.unix(poolRaw[7]).toDate(),
+                inputSymbol: symbolInput,
+                outputSymbol: symbolOutput,
+                amount_reward: Number(poolRaw[3]),
+                total_pooled: Number(poolRaw[4]),
+                max_pooled:  Number(poolRaw[5])
+            }
+    }
+
     static async fetchLiveEthPools(): Promise<StakingPool[]> {
         try {
             const storage = localStorage.getItem('livePools');
@@ -37,6 +60,7 @@ export default class StakingPoolProvider {
             }
 
             const poolsRaw: any = await EthHelper.callOnContract(ethStakingContract.methods.fetchLivePools(), undefined)
+            const poolsPlusRaw: any = await EthHelper.callOnContract(ethStakingContract.methods.fetchLivePoolsPlus(), undefined)
             const pools: StakingPool[] = []
 
             for (var i = 0; i < poolsRaw[0].length; i++) {
@@ -55,18 +79,10 @@ export default class StakingPoolProvider {
                     endDate: moment.unix(poolsRaw[5][i]).toDate(),
                     inputSymbol: symbolInput,
                     outputSymbol: symbolOutput,
-                    amount_reward: undefined,
-                    total_pooled: undefined,
-                    max_pooled: undefined
+                    amount_reward: Number(poolsPlusRaw[0][i]),
+                    total_pooled: Number(poolsPlusRaw[1][i]),
+                    max_pooled:  Number(poolsPlusRaw[2][i])
                 })
-            }
-            if (poolsRaw[0].length > 0) {
-                const poolsPlusRaw: any = await EthHelper.callOnContract(ethStakingContract.methods.fetchLivePoolsPlus(), undefined)
-                for (var i = 0; i < poolsPlusRaw[0].length; i++) {
-                    pools[i].amount_reward = Number(poolsPlusRaw[0][i])
-                    pools[i].total_pooled = Number(poolsPlusRaw[1][i])
-                    pools[i].max_pooled = Number(poolsPlusRaw[2][i])
-                }
             }
 
             localStorage.setItem('livePools', JSON.stringify({

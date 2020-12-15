@@ -21,4 +21,13 @@ export default class EthereumHelper {
             } catch(e) { rej(e) }
           })
     }
+    
+    static getContractError(error: any) : string {
+      try {
+        var lines = error.message.split('\n');
+        lines.splice(0,1);
+        const json = JSON.parse(lines.join('\n'));
+        return (json.originalError !== undefined) ? json.originalError.message : JSON.stringify(error)
+      } catch (e) { return JSON.stringify(error) }
+    }
 }

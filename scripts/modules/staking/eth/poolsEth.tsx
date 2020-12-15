@@ -6,6 +6,7 @@ import ReducersCombinedState from '../../../reducers/types/reducers';
 import StakingPoolProvider from "../../../providers/stakingPoolProvider"
 import StakingPool from '../../../providers/models/staking/pool';
 import Env from "../../../env";
+import { getImageByPoolName } from "../images";
 
 const moment = require('moment');
 class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
@@ -27,15 +28,6 @@ class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
         if (pools !== undefined) {
             this.setState({pools, loading: false})
         }
-    }
-
-    getImageByPoolName(name: string): string {
-        name = name.toLowerCase()
-
-        if (name.includes("compound")) {
-            return require(`../../../../assets/compound.png`)
-        }
-        return "";
     }
 
     getFarmingPeriod(startDate: Date, endDate: Date): string {
@@ -125,8 +117,8 @@ class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
                     return <div key={`pool-${i}`} className="sub-section col-sm-12" style={{background: "linear-gradient(to right, rgb(59 67 107), rgb(21 26 47))", color: "white"}}>
                         <div style={{ display: "flex", flex: "1" }}>
                             <div style={{ margin: "10px", display: "flex", flex: 1 }}>
-                                <img src={this.getImageByPoolName(e.name)} 
-                                    style={{ borderRadius: "15px", width: "85px", marginLeft: "auto", marginRight: "auto" }} />
+                                <img src={getImageByPoolName(e.name)} 
+                                    style={{ borderRadius: "15px", width: "65px", height: "65px", marginLeft: "auto", marginRight: "auto" }} />
                             </div>
                             <div style={{ margin: "10px", flex: 3 }}>
                                 <div>
@@ -154,7 +146,7 @@ class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
                             display: "block", marginTop: "10px",
                             width: "100%", textAlign: "center", minHeight: "45px", lineHeight: "45px", fontSize: "20px"
                         }} onClick={() => {  
-                            this.props.push("/staking/x")
+                            this.props.push(`/staking/${e.hashPool}`)
                         }}>
                             More Details
                         </div>
