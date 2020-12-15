@@ -10,6 +10,7 @@ import ReducersCombinedState from '../../reducers/types/reducers';
 import { AppState } from '../../reducers/types/app';
 import { requestSwitchSidebarOpen } from '../../actions/app';
 import { toastr } from 'react-redux-toastr';
+import StakingPoolProvider from '../../providers/stakingPoolProvider';
 
 interface SidemenuProps {
     location: any,
@@ -18,8 +19,19 @@ interface SidemenuProps {
 }
 
 class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}> {
+
+    state: any
     constructor(props: any) {
         super(props);
+        this.state = {
+            poolsCount: 0
+        }
+    }
+
+    async componentDidMount() {
+        const count = await StakingPoolProvider.countLiveEthPools();
+        if (count === 0) { return }
+        this.setState({poolsCount: count})
     }
 
     render() {
@@ -31,7 +43,7 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                             Staking Pools Available
                         </h3>
                         <div style={{ textAlign: "center", fontSize: "24px" }}>
-                            5
+                            {this.state.poolsCount}
                         </div>
                         <h3>
                             PTE available

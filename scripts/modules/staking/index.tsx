@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import EthereumPoolViews from "./eth/poolsEth"
 import NeoPoolViews from "./neo/poolsNeo";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
+import Env from "../../env";
 
 enum ChainPools {
     ETH = "eth",

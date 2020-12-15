@@ -41,7 +41,7 @@ class NeoPoolsView extends React.Component<ReducersCombinedState, {}>  {
         return <div>
             <div className="content-section">
                 {this.state.pools.map((e, i) => {
-                    return <div className="sub-section">
+                    return <div key={`pool-${i}`} className="sub-section col-sm-12" style={{background: "linear-gradient(to right, rgb(59 67 107), rgb(21 26 47))", color: "white"}}>
                         <div style={{ display: "flex", flex: "1" }}>
                             <div style={{ margin: "10px", display: "flex", flex: 1 }}>
                                 <img src={e.image}

@@ -12,6 +12,13 @@ export default class StakingPoolProvider {
         return (diff / 60000);
     }
 
+    static async countLiveEthPools(): Promise<number> {
+        try {
+        const poolsRaw: any = await EthHelper.callOnContract(ethStakingContract.methods.fetchLivePools(), undefined)
+        return poolsRaw[0].length
+        } catch (e) { return 0}
+    }
+
     static async fetchLiveEthPools(): Promise<StakingPool[]> {
         try {
             const storage = localStorage.getItem('livePools');
@@ -20,7 +27,12 @@ export default class StakingPoolProvider {
                 const timealiveness = this.getMinutesBetweenDates(new Date(datas.date), new Date())
      
                 if (timealiveness < 1) {
-                    return datas.pools;
+                    datas.pools.forEach((x: StakingPool) => {
+                        x.startDate = new Date(x.startDate)
+                        x.endDate = new Date(x.endDate)
+                    })
+
+                    return datas.pools as StakingPool[];
                 }
             }
 
@@ -42,8 +54,19 @@ export default class StakingPoolProvider {
                     startDate: moment.unix(poolsRaw[4][i]).toDate(),
                     endDate: moment.unix(poolsRaw[5][i]).toDate(),
                     inputSymbol: symbolInput,
-                    outputSymbol: symbolOutput
+                    outputSymbol: symbolOutput,
+                    amount_reward: undefined,
+                    total_pooled: undefined,
+                    max_pooled: undefined
                 })
+            }
+            if (poolsRaw[0].length > 0) {
+                const poolsPlusRaw: any = await EthHelper.callOnContract(ethStakingContract.methods.fetchLivePoolsPlus(), undefined)
+                for (var i = 0; i < poolsPlusRaw[0].length; i++) {
+                    pools[i].amount_reward = Number(poolsPlusRaw[0][i])
+                    pools[i].total_pooled = Number(poolsPlusRaw[1][i])
+                    pools[i].max_pooled = Number(poolsPlusRaw[2][i])
+                }
             }
 
             localStorage.setItem('livePools', JSON.stringify({
