@@ -32,20 +32,43 @@ export default class StakingPoolProvider {
                 name: web3.utils.toAscii(poolRaw[0]).replace(/[^0-9a-z ]/gi, ''),
                 inputAsset: poolRaw[1],
                 ouputAsset: poolRaw[2],
-                startDate: moment.unix(poolRaw[6]).toDate(),
-                endDate: moment.unix(poolRaw[7]).toDate(),
+                startDate: moment.unix(poolRaw[7]).toDate(),
+                endDate: moment.unix(poolRaw[8]).toDate(),
                 inputSymbol: symbolInput,
                 outputSymbol: symbolOutput,
                 amount_reward: Number(poolRaw[3]),
                 total_pooled: Number(poolRaw[4]),
-                max_pooled:  Number(poolRaw[5])
+                max_pooled:  Number(poolRaw[5]),
+                max_wallet_pooled: Number(poolRaw[6])
             }
+    }
+
+    static async fetchAmountPooled(hash: string, address: string): Promise<Number> {
+        try {
+            const amountPooled: any = await EthHelper.callOnContract(ethStakingContract.methods.getTotalWalletPoolInputAmount(hash, address), address)
+            return (amountPooled > 0) ? amountPooled / (10 ** 18) : 0
+        }
+        catch (e) {
+            console.error(e)
+            return 0
+        }
+    }
+
+    static async depositInPool(hash: string, amount: number, from: string): Promise<Number> {
+            const stringDecimalAmount: string = (amount * (10 ** 18)).toFixed(0)
+            await EthHelper.sendOnContract(ethStakingContract.methods.depositInPool(hash, stringDecimalAmount), from)
+        return 0
+    }
+
+    static async withdrawFromPool(hash: string, from: string) : Promise<number> {
+        const res = await EthHelper.sendOnContract(ethStakingContract.methods.withdrawFromPool(hash), from)
+        return res
     }
 
     static async fetchLiveEthPools(): Promise<StakingPool[]> {
         try {
             const storage = localStorage.getItem('livePools');
-            if (storage !== undefined) {
+            if (storage != null) {
                 const datas: any = JSON.parse(storage);
                 const timealiveness = this.getMinutesBetweenDates(new Date(datas.date), new Date())
      
@@ -81,7 +104,8 @@ export default class StakingPoolProvider {
                     outputSymbol: symbolOutput,
                     amount_reward: Number(poolsPlusRaw[0][i]),
                     total_pooled: Number(poolsPlusRaw[1][i]),
-                    max_pooled:  Number(poolsPlusRaw[2][i])
+                    max_pooled:  Number(poolsPlusRaw[2][i]),
+                    max_wallet_pooled: 0
                 })
             }
 

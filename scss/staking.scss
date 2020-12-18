@@ -101,3 +101,20 @@
         }
     }
 }
+
+#submit-staking {
+    padding: 0.7em 6.1em !important;
+}
+
+
+input[type=readonly] {
+    height: 39px;
+    vertical-align: middle;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #444f81;
+    border: none;
+    color: white;
+    padding-left: 10px;
+    min-width: 250px;
+}

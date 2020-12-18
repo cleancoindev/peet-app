@@ -9,6 +9,10 @@ import StakingPoolProvider from '../../providers/stakingPoolProvider';
 import EthereumHelper from '../../helpers/ethHelper';
 import * as ConnectedReactRouter from 'connected-react-router';
 import { getImageByPoolName } from "./images";
+import { getErc20Contract, web3 } from "../../store"
+import { getWebsiteByPoolName } from "./website"
+import ReducersCombinedState from '../../reducers/types/reducers';
+import Env from "../../env";
 
 const moment = require('moment');
 
@@ -34,7 +38,7 @@ createTheme('peet-table', {
     },
 });
 
-class StakingDetails extends React.Component {
+class StakingDetails extends React.Component<ReducersCombinedState> {
     public state: any
     public props: any
     constructor(props: any) {
@@ -52,23 +56,32 @@ class StakingDetails extends React.Component {
                     },
                 ]
             },
+            amountPooled: 0,
             pool: undefined,
-            loading: true
+            loading: true,
+            canWithdraw: false,
+            rawValueStakeAmount: "0.00",
+            fromAddr: undefined,
+            textPool: "",
+            textWithdraw: ""
         }
         this.fetchHistory = this.fetchHistory.bind(this)
+        this.poolAsset = this.poolAsset.bind(this)
+        this.withdraw = this.withdraw.bind(this)
     }
 
-    async fetchHistory() {
+    async fetchHistory(toAdd: number[]) {
         try {
             const history = await PeetOracleProvider.fetchHistoryPool(this.props.match.params.poolId)
                 const datas = []
-                let minLen: number = history.data.length - 7;
+                let minLen: number = (toAdd.length + history.data.length) - 7;
 
                 while(minLen < 0) {
                     datas.push(0)
                     minLen++;
                 }
                 history.data.forEach(x => datas.push(x))
+                toAdd.forEach(x => datas.push(x))
                 this.setState({
                     chartData: {
                     labels: ["", "", "", "", "", "", ""],
@@ -86,26 +99,42 @@ class StakingDetails extends React.Component {
 
     }
 
+    
     async componentDidMount() {
-        this.fetchHistory()
- 
-        try {
+        this.fetchAddrAndInit()
+        this.fetchHistory([])
+    }
+
+    componentDidUpdate(prevProps: any, _: any) {
+        if(prevProps.eth.accounts !== this.props.eth.accounts) {
+            this.fetchAddrAndInit();
+        }
+    }
+
+    fetchAddrAndInit() {
+        if(this.props.eth.accounts.length == 0) return;
+        this.setState({fromAddr: this.props.eth.accounts[0]});
+
+        this.initPoolInfo(this.props.eth.accounts[0])
+    }
+
+    async initPoolInfo(fromAddr: string) {
+    try {
             const pool = await StakingPoolProvider.fetchPool(this.props.match.params.poolId)
-            this.setState({pool, loading: false})
+            const amountPooled = await StakingPoolProvider.fetchAmountPooled(this.props.match.params.poolId, fromAddr)
+            // var canWithdraw: boolean = (amountPooled > 0 && new Date() > pool.endDate)
+            var canWithdraw: boolean = true
+            this.setState({pool, loading: false, amountPooled, canWithdraw, textPool: `Pool my ${pool.inputSymbol}`, textWithdraw: `Withdraw my ${pool.outputSymbol} / ${pool.inputSymbol}`})
         } catch (e) {
             const errorString: string = EthereumHelper.getContractError(e)
             if (errorString.includes("Invalid Pool")) {
+                toastr.error('Error', 'Invalid pool hash.. redirecting to live pools list')
                 this.props.push('/staking')
-            } else {
-                toastr.error('Error', errorString);
             }
+            EthereumHelper.errorParser(e)
         }
-        // toastr.info('Staking', 
-        //     "This is a demonstration page for the future staking system, you can't interact with the page yet, stay tuned on our social networks",
-        //     {
-        //         timeOut: 10000
-        //     });
     }
+
 
     getFarmingPeriod(endDate: Date): string {
         var a = moment(new Date().toISOString());
@@ -133,6 +162,88 @@ class StakingDetails extends React.Component {
         return `${percent.toFixed(3)}`
     }
 
+    async withdraw(event: any)
+    {
+        event.preventDefault()
+        if (!this.state.canWithdraw) {
+            return toastr.error("Error", `You cant withdraw, invalid amount or end date of the pool not reached`)
+        }
+        try
+        {
+            this.setState({textWithdraw: `Waiting Confirmation...`})
+            let withdrawReward: number = await StakingPoolProvider.withdrawFromPool(this.props.match.params.poolId, this.state.fromAddr)
+            withdrawReward = withdrawReward / (10 ** 18)
+
+            toastr.success("Staking ended", `Congratulations! You received ${withdrawReward} ${this.state.pool.outputSymbol} as reward from that pool`)
+            this.setState({canWithdraw: false, textWithdraw: `Withdraw my ${this.state.pool.outputSymbol} / ${this.state.pool.inputSymbol}`, amountPooled: 0})
+        }
+        catch (e) {
+            this.setState({textWithdraw: `Withdraw my ${this.state.pool.outputSymbol} / ${this.state.pool.inputSymbol}`})
+            EthereumHelper.errorParser(e)
+        }
+    }
+
+    async checkAllowance(): Promise<boolean>
+    {
+        return new Promise<boolean>(async (res, rej) => {
+            const inputAssetContract = getErc20Contract(this.state.pool.inputAsset)
+            const maxAllowance: number = (await EthereumHelper.callOnContract(inputAssetContract.methods.allowance(this.state.fromAddr, Env().ETH_STAKING_CONTRACT), this.state.fromAddr)) / (10 ** 18)
+            if (maxAllowance > 0) { return res(true) }
+
+            this.setState({textPool: `Waiting Approvance...`})
+            inputAssetContract.methods.approve(Env().ETH_STAKING_CONTRACT, web3.utils.toWei("100000", "ether")).send({from: this.props.eth.accounts[0]}).then(() => {
+                this.setState({textPool: `Pool my ${this.state.pool.inputSymbol}`})
+                res(true)
+            }).catch((ex: Error) => {
+                toastr.error('Error', 'Allowance declined')
+                res(false)
+            });
+        })
+
+    }
+
+    calculateReward(): string {
+        const maxPooled = this.state.pool.max_pooled / (10 ** 18)
+        const rewardAmount = this.state.pool.amount_reward / (10 ** 18)
+        const poolPercent: number = (100 * this.state.amountPooled) / maxPooled
+
+        return (rewardAmount * (poolPercent / 100)).toFixed(8)
+    }
+
+    async poolAsset(event: any)
+    {
+        event.preventDefault()
+
+        if (this.state.fromAddr === undefined) { return toastr.error('Wallet Error', 'Please connect your wallet') }
+
+        const allowance: boolean = await this.checkAllowance()
+        if (!allowance) { return }
+        const inputAssetContract = getErc20Contract(this.state.pool.inputAsset)
+        try {
+            const maxInputAmount: number = (await EthereumHelper.callOnContract(inputAssetContract.methods.balanceOf(this.state.fromAddr), this.state.fromAddr)) / (10 ** 18)
+            const value: number = Number(this.state.rawValueStakeAmount)
+            if (this.state.rawValueStakeAmount === "0.00") { return toastr.error('Staking Error', `Please set a value to stake`) } 
+            if (value < 0 || value > maxInputAmount) {
+                return toastr.error('Staking Error', `You only have ${maxInputAmount} ${this.state.pool.inputSymbol} available in your wallet!`)
+            }
+            this.setState({textPool: `Waiting Confirmation...`})
+            await StakingPoolProvider.depositInPool(this.props.match.params.poolId, value, this.state.fromAddr)
+            
+            this.setState({amountPooled: this.state.amountPooled + value, textPool: `Pool my ${this.state.pool.inputSymbol}`})
+            toastr.success('Staking Success', `Congratulations! You sucessfully pooled your ${value} ${this.state.pool.inputSymbol}`)
+
+            this.fetchHistory([value])
+            this.initPoolInfo(this.state.fromAddr)
+        } catch (e) {
+            const errorString: string = EthereumHelper.getContractError(e)
+            if (errorString.includes("Max wallet")) {
+                toastr.error(`Staking Error`, `Max wallet pool limit reach with this amount, you can only stake a maximum of ${this.state.pool.max_wallet_pooled / (10 ** 18)} ${this.state.pool.inputSymbol}`)
+            }
+
+            EthereumHelper.errorParser(e)
+            this.setState({textPool: `Pool my ${this.state.pool.inputSymbol}`})
+        }
+    }
 
     render() {
         return <div>
@@ -197,10 +308,18 @@ class StakingDetails extends React.Component {
                             <div>
                                 <span>{this.state.pool.outputSymbol}</span>
                             </div>
+
                         </div>
-                        <div style={{ textAlign: "center", marginTop: "5px", marginBottom: "10px" }}>
-                            <div className="btn-icon-rounded" style={{ display: "block" }} onClick={() => { }}>
-                                <a target="_blank" href="#"><i className="fas fa-sign-in-alt"></i> Go to Pool Website</a>
+                        <hr/>
+                        <div className="sub-text">
+                            <div>
+                            <span title="Total of reward amount in that pool" style={{fontSize: 10, letterSpacing: 1}}>Max rewards {this.state.pool.amount_reward / (10 ** 18)} {this.state.pool.outputSymbol} </span>
+                            </div>
+                        </div>
+
+                        <div className="sub-text">
+                            <div>
+                            <span title="Max participation per wallet" style={{fontSize: 10, letterSpacing: 1}}>Max participation {this.state.pool.max_wallet_pooled / (10 ** 18)} {this.state.pool.inputSymbol} </span>
                             </div>
                         </div>
                     </div>
@@ -211,7 +330,7 @@ class StakingDetails extends React.Component {
                         </div>
                         <div style={{ marginLeft: "auto", marginRight: "auto", textAlign: "center" }}>
                             <h3>
-                                0
+                                {this.state.amountPooled}
                             </h3>
                         </div>
                         <hr/>
@@ -220,7 +339,7 @@ class StakingDetails extends React.Component {
                         </div>
                         <div style={{ marginLeft: "auto", marginRight: "auto", textAlign: "center" }}>
                             <h3>
-                                {this.state.pool.total_pooled / (10**18)}
+                                {this.state.pool.total_pooled / (10**18)} / {this.state.pool.max_pooled / (10**18)}
                             </h3>
                         </div>
                         <hr/>
@@ -262,28 +381,32 @@ class StakingDetails extends React.Component {
                         />
                     </div>
                     <div className="content-section" style={{ margin: "10px", padding: "20px" }}>
-
+                        <form style={{minWidth: "100%"}}>
                         <div className="select-text-combo" style={{ display: "block", width: "100%", marginBottom: "10px" }}>
                             <div className="select-container" style={{ display: "flex" }}>
                                 <div className="current-select" style={{ flex: 1 }} onClick={() => this.setState({ selectState: !this.state.selectState })}>
                                     <span style={{ marginLeft: 0 }}>Amount to stake</span>
                                 </div>
-                                <input style={{ flex: 2, minWidth: "auto" }} type="number" placeholder={`0.00 ${this.state.pool.inputSymbol}`} readOnly />
+                                <input value={this.state.rawValueStakeAmount} style={{ flex: 2, minWidth: "auto" }} type="number" placeholder={`0.00 ${this.state.pool.inputSymbol}`} onChange={(event: any) => {
+                                    if (event.target.value < 0) { event.target.value = 0}
+
+                                    this.setState({rawValueStakeAmount: event.target.value});
+                                }} />
                             </div>
                         </div>
 
                         <div style={{ textAlign: "center", marginTop: "10px", display: "block", width: "100%" }}>
-                        <div className="alert" role="alert">
-                            <p style={{fontSize: 12}}>I understand that my {this.state.pool.inputSymbol} will be locked for the time of the pool duration.</p>
-                        </div>
-                        </div>
-
-                        <div style={{ textAlign: "center", marginTop: "10px", display: "block", width: "100%" }}>
-                            <div className="btn-icon-rounded" style={{ display: "block" }} onClick={() => { }}>
-                                Pool my asset
+                            <div className="alert" role="alert">
+                                <p style={{fontSize: 12}}>I understand that my {this.state.pool.inputSymbol} will be locked for the time of the pool duration.</p>
                             </div>
                         </div>
-
+                       
+                        <div style={{ textAlign: "center", display: "block", width: "100%" }}>
+                            <div style={{ display: "block" }} onClick={() => { }}>
+                                    <input onClick={this.poolAsset} id="submit-staking" type="submit" value={this.state.textPool}></input>
+                            </div>
+                        </div>
+                     </form>
                     </div>
 
                     <div className="content-section" style={{ margin: "10px", padding: "20px" }}>
@@ -293,22 +416,29 @@ class StakingDetails extends React.Component {
                                 <div className="current-select" style={{ flex: 1 }} onClick={() => this.setState({ selectState: !this.state.selectState })}>
                                     <span style={{ marginLeft: 0 }}>Pooled {this.state.pool.inputSymbol}</span>
                                 </div>
-                                <input style={{ flex: 2, minWidth: "auto" }} type="number" placeholder={`0.00 ${this.state.pool.inputSymbol}`} readOnly />
+                                <input style={{ flex: 2, minWidth: "auto" }} type="readonly" value={`${this.state.amountPooled} ${this.state.pool.inputSymbol}`} />
                             </div>
                         </div>
 
                         <div className="select-text-combo" style={{ display: "block", width: "100%", marginBottom: "10px" }}>
                             <div className="select-container" style={{ display: "flex" }}>
                                 <div className="current-select" style={{ flex: 1 }} onClick={() => this.setState({ selectState: !this.state.selectState })}>
-                                    <span style={{ marginLeft: 0 }}>{this.state.pool.outputSymbol} Reward</span>
+                                    <span style={{ marginLeft: 0, fontSize: 13 }}>{this.state.pool.outputSymbol} Calculated Reward</span>
                                 </div>
-                                <input style={{ flex: 2, minWidth: "auto" }} type="number" placeholder={`0.00 ${this.state.pool.outputSymbol}`} readOnly />
+                                <input style={{ flex: 2, minWidth: "auto" }} type="readonly" value={`${this.calculateReward()} ${this.state.pool.outputSymbol}`} />
                             </div>
                         </div>
 
-                        <div style={{ textAlign: "center", marginTop: "10px", display: "block", width: "100%" }}>
-                            <div className="btn-icon-rounded" style={{ display: "block" }} onClick={() => { }}>
-                                Withdraw my asset
+                        <div style={{ textAlign: "center", display: "block", width: "100%" }}>
+                            <div style={{ display: "block" }} onClick={() => { }}>
+                                <form>
+                                    {this.state.canWithdraw ?
+                                    <input onClick={this.withdraw} id="submit-staking" type="submit" value={this.state.textWithdraw}></input>
+                                    :
+                                    <input title="You cant withdraw, invalid amount or end date of the pool not reached" onClick={this.withdraw} id="submit-staking" type="submit" value={this.state.textWithdraw} disabled></input>
+                                    }
+                                    
+                                </form>
                             </div>
                         </div>
 
@@ -341,9 +471,11 @@ class StakingDetails extends React.Component {
 }
 
 export default connect((state: any, ownProps: any) => {
-    return {}
+    return {
+        eth: state.eth
+    }
 }, (dispatch) => {
-    return {     
+    return {
         push: (route) => {
             dispatch(ConnectedReactRouter.push(route));
         },

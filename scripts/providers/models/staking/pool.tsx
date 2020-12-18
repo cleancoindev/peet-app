@@ -6,5 +6,9 @@ export default interface StakingPool {
     startDate: Date,
     endDate: Date,
     inputSymbol: string,
-    outputSymbol: string
+    outputSymbol: string,
+    amount_reward: number | undefined,
+    total_pooled: number | undefined,
+    max_pooled: number | undefined
+    max_wallet_pooled: number | undefined
 }

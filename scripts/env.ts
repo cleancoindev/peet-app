@@ -15,7 +15,7 @@ const developmentEnv: Env = {
     PEETPAY_CONTRACT_ADDR: "0x6de30b311de01da5b65d4027ae9fa37bd8d18bfd",
     ORACLE_PEET_URL: "http://localhost:1337",
     WEB3_PROVIDER: "wss://ropsten.infura.io/ws/v3/4f477eb263cd4f2d8777c2ed46ac552f",
-    ETH_STAKING_CONTRACT: "0x2D4334916d133A63aE7cC91759a0350dc551DDee"
+    ETH_STAKING_CONTRACT: "0x1e8A821a0a79c2DF0af398bb50E2e1b6c08821Bc"
 }
 
 const prodEnv: Env = {
@@ -25,7 +25,7 @@ const prodEnv: Env = {
     PEETPAY_CONTRACT_ADDR: "0x770b6b2bdf62b1a54fd68e2447d51671da0ebf03",
     ORACLE_PEET_URL: "https://oracle.peetdecentralized.finance",
     WEB3_PROVIDER: "wss://mainnet.infura.io/ws/v3/4f1a24ed50654f56b6ccf068bc54d64c",
-    ETH_STAKING_CONTRACT: "0x2D4334916d133A63aE7cC91759a0350dc551DDee"
+    ETH_STAKING_CONTRACT: "0x1e8A821a0a79c2DF0af398bb50E2e1b6c08821Bc"
 }
 
 const envs = {
