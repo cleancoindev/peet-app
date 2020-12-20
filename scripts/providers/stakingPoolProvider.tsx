@@ -120,4 +120,60 @@ export default class StakingPoolProvider {
             toastr.error('Error', 'An error occured on the contract call, please try again later');
         }
     }
+
+    static async fetchEndedEthPools(): Promise<StakingPool[]> {
+        try {
+            const storage = localStorage.getItem('endedPools');
+            if (storage != null) {
+                const datas: any = JSON.parse(storage);
+                const timealiveness = this.getMinutesBetweenDates(new Date(datas.date), new Date())
+     
+                if (timealiveness < 1) {
+                    datas.pools.forEach((x: StakingPool) => {
+                        x.startDate = new Date(x.startDate)
+                        x.endDate = new Date(x.endDate)
+                    })
+
+                    return datas.pools as StakingPool[];
+                }
+            }
+
+            const poolsRaw: any = await EthHelper.callOnContract(ethStakingContract.methods.fetchEndedPools(), undefined)
+            const poolsPlusRaw: any = await EthHelper.callOnContract(ethStakingContract.methods.fetchEndedPoolsPlus(), undefined)
+            const pools: StakingPool[] = []
+
+            for (var i = 0; i < poolsRaw[0].length; i++) {
+                const inputAssetContract = getErc20Contract(poolsRaw[2][i])
+                const outputAssetContract = getErc20Contract(poolsRaw[3][i])
+
+                const symbolInput: string = await EthHelper.callOnContract(inputAssetContract.methods.symbol(), undefined)
+                const symbolOutput: string = await EthHelper.callOnContract(outputAssetContract.methods.symbol(), undefined)
+
+                pools.push({
+                    hashPool: poolsRaw[0][i],
+                    name: web3.utils.toAscii(poolsRaw[1][i]).replace(/[^0-9a-z ]/gi, ''),
+                    inputAsset: poolsRaw[2][i],
+                    ouputAsset: poolsRaw[3][i],
+                    startDate: moment.unix(poolsRaw[4][i]).toDate(),
+                    endDate: moment.unix(poolsRaw[5][i]).toDate(),
+                    inputSymbol: symbolInput,
+                    outputSymbol: symbolOutput,
+                    amount_reward: Number(poolsPlusRaw[0][i]),
+                    total_pooled: Number(poolsPlusRaw[1][i]),
+                    max_pooled:  Number(poolsPlusRaw[2][i]),
+                    max_wallet_pooled: 0
+                })
+            }
+
+            localStorage.setItem('endedPools', JSON.stringify({
+                pools,
+                date: new Date()
+            }));
+
+            return pools
+        } catch (e) {
+            console.error(e)
+            toastr.error('Error', 'An error occured on the contract call, please try again later');
+        }
+    }
 }

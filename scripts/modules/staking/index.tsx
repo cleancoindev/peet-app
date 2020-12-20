@@ -4,6 +4,7 @@ import EthereumPoolViews from "./eth/poolsEth"
 import NeoPoolViews from "./neo/poolsNeo";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import Env from "../../env";
+import * as ConnectedReactRouter from 'connected-react-router';
 
 enum ChainPools {
     ETH = "eth",
@@ -13,10 +14,12 @@ enum ChainPools {
 
 class Staking extends React.Component {
     public state: any
+    public props: any
     constructor(props: any) {
         super(props);
         this.state = {
-            defaultChain: ChainPools.ETH
+            defaultChain: ChainPools.ETH,
+            poolHashSearch: undefined
         }
 
         this.onChangeChain = this.onChangeChain.bind(this)
@@ -35,10 +38,18 @@ class Staking extends React.Component {
                 <div className="content-section" style={{ marginBottom: "0px" }}>
                     <div className="sub-section">
                         <h2 style={{ fontSize: "22px" }}>  Stake with Peet and earn on any blockchain. Feel the simplicity to use and embrace the defi world multi-chain. <br /><br />Select your desired chain pools from the list</h2>
-
+                        <hr/>
+                        <form>
+                            <div className="col-12" style={{textAlign: "center"}}>
+                                <input placeholder="Pool hash" style={{marginBottom: "10px", textAlign: "center"}} type="text" 
+                                onChange={(e) => {
+                                    this.setState({poolHashSearch: e.target.value})
+                                }} value={this.state.searchPoolHash} />
+                                <input onClick={() => { this.props.push(`/staking/${this.state.poolHashSearch}`) }} id="submit-staking" type="submit" value="Goto pool"></input>
+                            </div>
+                        </form>
                     </div>
                 </div>
-
 
                 <div className={`sub-section col-6-md col-12-sm content-sub-staking ${(this.state.defaultChain === ChainPools.ETH ? 'active-sub-staking' : '')}`}>
                     <div onClick={() => { this.onChangeChain(ChainPools.ETH) }}>
@@ -80,6 +91,7 @@ class Staking extends React.Component {
                     </div>
                 </CSSTransition>
             </TransitionGroup>
+            
         </div>;
     }
 }
@@ -87,7 +99,9 @@ class Staking extends React.Component {
 export default connect((state: any, ownProps: any) => {
     return {}
 }, (dispatch) => {
-    return {
-
+    return {     
+        push: (route) => {
+            dispatch(ConnectedReactRouter.push(route));
+        },
     }
 })(Staking)

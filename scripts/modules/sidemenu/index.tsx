@@ -38,7 +38,7 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
         return <div id="sidemenu" className={this.props.app.sidebarOpen ? "sidemenu-open" : ""}>
             <Router>
                 <div className="sidebar-container">
-                    <div className={"menu " + (location.pathname.startsWith("/staking") ? "" : "menu-closed")}>
+                    <div className={"menu " + (location.pathname.startsWith("/staking") || (location.pathname.endsWith("/") ? "" : "menu-closed")}>
                         <h3>
                             Staking Pools Available
                         </h3>
@@ -53,8 +53,20 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                         </div>
                     </div>
                     <div className="menu">
-                        <div className={"menu-item " + (location.pathname == "/" ? "active" : "")} onClick={() => {
-                            this.props.push("/")
+
+                    <div className={"menu-item " + (location.pathname == "/staking" || location.pathname =="/" ? "active" : "")} onClick={() => {
+                            this.props.push("/staking")
+                            this.props.requestSwitchSidebarOpen();
+                        }}>
+                            <div className="menu-item-icon">
+                                <i className="fas fa-boxes"></i>
+                            </div>
+                            <span>Staking</span>
+                            <div className="new-feature-icon">new</div>
+                        </div>
+
+                        <div className={"menu-item " + (location.pathname == "/analytics" ? "active" : "")} onClick={() => {
+                            this.props.push("/analytics")
                             this.props.requestSwitchSidebarOpen();
                         }}>
                             <div className="menu-item-icon">
@@ -62,6 +74,8 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                             </div>
                             <span>Analytics</span>
                         </div>
+
+
                         <div className={"menu-item " + (location.pathname == "/chain-bridge" ? "active" : "")} onClick={() => {
                             this.props.push("/chain-bridge")
                             this.props.requestSwitchSidebarOpen();
@@ -70,7 +84,6 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                                 <i className="fas fa-random"></i>
                             </div>
                             <span>Chain Bridge</span>
-                            <div className="new-feature-icon">new</div>
                         </div>
                         <div className={"menu-item " + (location.pathname == "/paypeet" ? "active" : "")} onClick={() => {
                             this.props.push("/paypeet")
@@ -81,18 +94,10 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                                 <i className="fab fa-ethereum"></i>
                             </div>
                             <span>PayPeet</span>
-                            <div className="new-feature-icon">new</div>
                         </div>
 
-                        <div className={"menu-item " + (location.pathname == "/staking" ? "active" : "")} onClick={() => {
-                            this.props.push("/staking")
-                            this.props.requestSwitchSidebarOpen();
-                        }}>
-                            <div className="menu-item-icon">
-                                <i className="fas fa-boxes"></i>
-                            </div>
-                            <span>Staking</span>
-                        </div>
+                                            
+
                         <div className="menu-item" onClick={() => window.open("https://etherscan.io/token/0x51bb9c623226ce781f4a54fc8f4a530a47142b6b")}>
                             <div className="menu-item-icon">
                                 <i className="fas fa-search"></i>
@@ -107,7 +112,7 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                             <div className="menu-item-icon">
                                 <i className="fas fa-coins"></i>
                             </div>
-                            <span>Tokens</span>
+                            <span>Contracts</span>
                         </div>
                         <div className={"menu-item " + (location.pathname == "/exchanges" ? "active" : "")} onClick={() => {
                             this.props.push("/exchanges")

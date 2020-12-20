@@ -7,6 +7,7 @@ import StakingPoolProvider from "../../../providers/stakingPoolProvider"
 import StakingPool from '../../../providers/models/staking/pool';
 import Env from "../../../env";
 import { getImageByPoolName } from "../images";
+import { SelectTextCombo } from "../../../components";
 
 const moment = require('moment');
 class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
@@ -15,16 +16,27 @@ class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
         super(props);
         this.state = {
             pools: [],
-            loading: true
+            loading: true,
+            searchPoolHash: undefined,
+            poolFilter: "livePools"
         }
+        this.setPoolFilterState = this.setPoolFilterState.bind(this)
     }
 
     componentDidMount() {
-        this.fetchPools(true)
+        this.fetchPools(this.state.poolFilter)
     }
 
-    async fetchPools(live: boolean) {
-        const pools: StakingPool[] = await StakingPoolProvider.fetchLiveEthPools()
+    async fetchPools(filter) {
+        this.setState({loading: true})
+
+        var pools: StakingPool[] = undefined
+        if (filter === "livePools") {
+            pools = await StakingPoolProvider.fetchLiveEthPools()
+        } else if (filter === "endedPools") {
+            pools = await StakingPoolProvider.fetchEndedEthPools()
+        }
+
         if (pools !== undefined) {
             this.setState({pools, loading: false})
         }
@@ -66,19 +78,29 @@ class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
         return `${percent.toFixed(3)}`
     }
 
+    setPoolFilterState(state: string) {
+        this.fetchPools(state)
+        this.setState({poolFilter: state})
+    }
+
     render() {
         return <div>
-
-            <div className="content-section"> 
-                <div className="sub-section col-sm-12">
-                    <h2 style={{fontSize: 12}}>Staking Smart Contract</h2>
-                    <hr/>
-                    <input type="text" onClick={() => {  var win = window.open(`https://etherscan.io/address/${Env().ETH_STAKING_CONTRACT}`, '_blank'); win.focus(); }}readOnly style={{marginBottom: "10px", textAlign: "center"}} value={Env().ETH_STAKING_CONTRACT} />
-                </div>
-             </div>
             <div className="content-section">
 
-                {this.state.loading &&
+
+            {!this.state.loading && this.state.pools.length == 0 &&
+               <div className="sub-section">
+                   {this.state.poolFilter === "livePools" ?
+                   <h2 style={{ fontSize: "18px" }}> No active pools currently</h2> :
+                   <h2 style={{ fontSize: "18px" }}> No ended pools currently</h2>
+                   }
+               
+
+           </div>}
+
+
+           
+           {this.state.loading &&
                 <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" style={{margin: 'auto', display: 'block'}} width="201px" height="201px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
                     <circle cx={64} cy={50} r={5} fill="#74007a">
                     <animate attributeName="cx" values="64;57" keyTimes="0;1" dur="0.8s" repeatCount="indefinite" />
@@ -106,12 +128,6 @@ class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
                     <animate attributeName="fill" values="#74007a;#74007a" keyTimes="0;1" dur="0.8s" repeatCount="indefinite" />
                     </circle>
                 </svg>}
-
-                {!this.state.loading && this.state.pools.length == 0 &&
-               <div className="sub-section">
-               <h2 style={{ fontSize: "18px" }}> No active pools currently</h2>
-
-           </div>}
 
                 {!this.state.loading && this.state.pools.map((e: StakingPool, i) => {
                     return <div key={`pool-${i}`} className="sub-section col-sm-12" style={{background: "linear-gradient(to right, rgb(59 67 107), rgb(21 26 47))", color: "white"}}>
@@ -215,6 +231,24 @@ class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
                         </div>
                     </div>
                 })}
+            </div>
+
+            <div className="content-section">
+                <div className="content-section col-12">
+                    <div className="sub-section col-sm-12">
+                        <div className="col-12">
+                        <h2 style={{ fontSize: "18px" }}> Use filters to retrieve an ended pool if you dont have the hash</h2>
+                        <select onChange={(e) => {
+                            this.setPoolFilterState(e.target.value)
+                         }}>
+                            <option value="livePools">Only Live Pools</option>
+                            <option value="endedPools">Only Ended Pools</option>
+                        </select>
+                        </div>
+                    </div>
+                
+                </div>
+
             </div>
         </div>;
     }

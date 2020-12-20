@@ -63,7 +63,8 @@ class StakingDetails extends React.Component<ReducersCombinedState> {
             rawValueStakeAmount: "0.00",
             fromAddr: undefined,
             textPool: "",
-            textWithdraw: ""
+            textWithdraw: "",
+            timeout: undefined
         }
         this.fetchHistory = this.fetchHistory.bind(this)
         this.poolAsset = this.poolAsset.bind(this)
@@ -99,10 +100,28 @@ class StakingDetails extends React.Component<ReducersCombinedState> {
 
     }
 
+    async componentWillUnmount() {
+        if (this.state.timeout !== undefined) {
+            clearTimeout(this.state.timeout)
+        }
+    }
+
     
     async componentDidMount() {
+        if (this.props.match.params.poolId.length !== 66) {
+            toastr.error('Error', 'Invalid pool hash!')
+            this.props.push('/staking')
+        }
+
         this.fetchAddrAndInit()
         this.fetchHistory([])
+
+        const timeout = setTimeout(() => {
+            if (this.state.fromAddr === undefined) {
+                toastr.error('Error', 'Please verify the pool hash or connect through Metamask')
+            }
+        }, 1500)
+        this.setState({timeout})
     }
 
     componentDidUpdate(prevProps: any, _: any) {
@@ -236,7 +255,7 @@ class StakingDetails extends React.Component<ReducersCombinedState> {
             this.initPoolInfo(this.state.fromAddr)
         } catch (e) {
             const errorString: string = EthereumHelper.getContractError(e)
-            if (errorString.includes("Max wallet")) {
+            if (errorString.includes("Max wallet") || errorString.includes("Max pool cap")) {
                 toastr.error(`Staking Error`, `Max wallet pool limit reach with this amount, you can only stake a maximum of ${this.state.pool.max_wallet_pooled / (10 ** 18)} ${this.state.pool.inputSymbol}`)
             }
 
@@ -247,7 +266,7 @@ class StakingDetails extends React.Component<ReducersCombinedState> {
 
     render() {
         return <div>
-            <h1>Staking Details</h1>
+            <h1> <span style={{color:"#007bff", cursor:"pointer"}} onClick={() => { this.props.push('/staking') }}>&#8592;</span> Pool Details <span style={{fontSize: 12}}>(poolHash: {this.props.match.params.poolId})</span></h1>
 
             {this.state.loading && <div className="content-section">
                 <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" style={{margin: 'auto', display: 'block'}} width="201px" height="201px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
@@ -447,7 +466,7 @@ class StakingDetails extends React.Component<ReducersCombinedState> {
             </div>}
 
 
-            <div className="content-section" style={{ margin: "10px", padding: "20px" }}>
+            {/* <div className="content-section" style={{ margin: "10px", padding: "20px" }}>
                 <DataTable
                     title="History"
                     columns={[
@@ -465,7 +484,7 @@ class StakingDetails extends React.Component<ReducersCombinedState> {
                     //     }
                     // ]}
                 />
-            </div>
+            </div> */}
         </div>;
     }
 }

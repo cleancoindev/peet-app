@@ -11,35 +11,44 @@ class NeoPoolsView extends React.Component<ReducersCombinedState, {}>  {
         super(props);
         this.state = {
             pools: [
-                {
-                    name: "Flamingo - FLM-nNEO",
-                    image: "https://flamingo.finance/img/logo.666871d1.svg",
-                    stakeFrom: "PTE",
-                    earnTo: "FLM",
-                    state: 1,
-                    blockchain: "neo",
-                    progress: 0,
-                    period: "30 day/s",
-                    endAt: "2020-12-31 01:00:00"
-                },
-                {
-                    name: "Flamincome",
-                    image: "https://avatars0.githubusercontent.com/u/70206242?s=200&v=4",
-                    stakeFrom: "PTE",
-                    earnTo: "USDT",
-                    state: 1,
-                    blockchain: "neo",
-                    progress: 0,
-                    period: "30 day/s",
-                    endAt: "2020-12-31 01:00:00"
-                }
-            ]
+                // {
+                //     name: "Flamingo - FLM-nNEO",
+                //     image: "https://flamingo.finance/img/logo.666871d1.svg",
+                //     stakeFrom: "PTE",
+                //     earnTo: "FLM",
+                //     state: 1,
+                //     blockchain: "neo",
+                //     progress: 0,
+                //     period: "30 day/s",
+                //     endAt: "2020-12-31 01:00:00"
+                // },
+                // {
+                //     name: "Flamincome",
+                //     image: "https://avatars0.githubusercontent.com/u/70206242?s=200&v=4",
+                //     stakeFrom: "PTE",
+                //     earnTo: "USDT",
+                //     state: 1,
+                //     blockchain: "neo",
+                //     progress: 0,
+                //     period: "30 day/s",
+                //     endAt: "2020-12-31 01:00:00"
+                // }
+            ],
+            loading: false
         }
     }
 
     render() {
         return <div>
+
             <div className="content-section">
+                            
+            {!this.state.loading && this.state.pools.length == 0 &&
+               <div className="sub-section">
+               <h2 style={{ fontSize: "18px" }}> No active pools currently</h2>
+
+           </div>}
+
                 {this.state.pools.map((e, i) => {
                     return <div key={`pool-${i}`} className="sub-section col-sm-12" style={{background: "linear-gradient(to right, rgb(59 67 107), rgb(21 26 47))", color: "white"}}>
                         <div style={{ display: "flex", flex: "1" }}>

@@ -44,7 +44,7 @@ class SelectTextCombo extends React.Component<SelectTextComboProps, SelectTextCo
         return <div className="select-text-combo">
             <div className="select-container">
                 <div className="current-select" onClick={() => this.setState({ selectState: !this.state.selectState })}>
-                    <img src={this.getSelectedItem().image} />
+                    {this.getSelectedItem() !== undefined && <img src={this.getSelectedItem().image} />}
                     <span>{this.getSelectedItem().name}</span>
 
                     {!this.props.readonly ? <i className="fas fa-caret-down" style={{ verticalAlign: "middle", marginLeft: "7px" }}></i> : null}
@@ -58,7 +58,7 @@ class SelectTextCombo extends React.Component<SelectTextComboProps, SelectTextCo
                             });
                             if(this.props.onSelectChange != null) this.props.onSelectChange(e.id);
                         }}>
-                            <img src={e.image} />
+                            {e.image !== undefined && <img src={e.image} />}
                             <span>{e.name}</span>
                         </div>
                     })}
