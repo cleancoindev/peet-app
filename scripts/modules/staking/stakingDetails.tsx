@@ -141,8 +141,8 @@ class StakingDetails extends React.Component<ReducersCombinedState> {
     try {
             const pool = await StakingPoolProvider.fetchPool(this.props.match.params.poolId)
             const amountPooled = await StakingPoolProvider.fetchAmountPooled(this.props.match.params.poolId, fromAddr)
-            // var canWithdraw: boolean = (amountPooled > 0 && new Date() > pool.endDate)
-            var canWithdraw: boolean = true
+            var canWithdraw: boolean = (amountPooled > 0 && new Date() > pool.endDate)
+            // var canWithdraw: boolean = true
             this.setState({pool, loading: false, amountPooled, canWithdraw, textPool: `Pool my ${pool.inputSymbol}`, textWithdraw: `Withdraw my ${pool.outputSymbol} / ${pool.inputSymbol}`})
         } catch (e) {
             const errorString: string = EthereumHelper.getContractError(e)
@@ -209,7 +209,7 @@ class StakingDetails extends React.Component<ReducersCombinedState> {
             const maxAllowance: number = (await EthereumHelper.callOnContract(inputAssetContract.methods.allowance(this.state.fromAddr, Env().ETH_STAKING_CONTRACT), this.state.fromAddr)) / (10 ** 18)
             if (maxAllowance > 0) { return res(true) }
 
-            this.setState({textPool: `Waiting Approvance...`})
+            this.setState({textPool: `Waiting Approval...`})
             inputAssetContract.methods.approve(Env().ETH_STAKING_CONTRACT, web3.utils.toWei("100000", "ether")).send({from: this.props.eth.accounts[0]}).then(() => {
                 this.setState({textPool: `Pool my ${this.state.pool.inputSymbol}`})
                 res(true)

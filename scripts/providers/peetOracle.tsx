@@ -103,4 +103,23 @@ export default class PeetOracleProvider {
                 });
         })
     }
+
+    static fetchUsdtWorth(): Promise<any>
+    {
+        return new Promise((cb, res) => {
+            const requestOptions = {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+            };
+
+            fetch(`${this.baseUrl}/front/usdt-worths`, requestOptions)
+                .then(response => {
+                    return response.json()
+                })
+                .then(data => { cb(data) })
+                .catch(error => {
+                    res(error)
+                });
+        })
+    }
 }

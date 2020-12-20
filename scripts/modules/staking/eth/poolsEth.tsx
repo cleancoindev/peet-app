@@ -8,6 +8,10 @@ import StakingPool from '../../../providers/models/staking/pool';
 import Env from "../../../env";
 import { getImageByPoolName } from "../images";
 import { SelectTextCombo } from "../../../components";
+import { ChainId, Token, WETH, Fetcher, Route, TokenAmount, TradeType, Trade } from '@uniswap/sdk'
+import { web3, currentStore } from "../../../store"
+import { TokenUsdtPriceRequest } from '../../../providers/models/oracle/tokenUsdtPriceRequest';
+import PeetOracleProvider from '../../../providers/peetOracle';
 
 const moment = require('moment');
 class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
@@ -18,13 +22,43 @@ class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
             pools: [],
             loading: true,
             searchPoolHash: undefined,
-            poolFilter: "livePools"
+            poolFilter: "livePools",
+            tokensPrice: [],
+            pricesInterval: undefined
         }
         this.setPoolFilterState = this.setPoolFilterState.bind(this)
+        this.getCalculatedRoi = this.getCalculatedRoi.bind(this)
     }
 
     componentDidMount() {
         this.fetchPools(this.state.poolFilter)
+        this.getPriceLoop()
+    }
+
+
+    async getPriceLoop() {
+
+        const updatePriceJob = async () => {
+            try {
+                const prices: TokenUsdtPriceRequest[] = (await PeetOracleProvider.fetchUsdtWorth()).datas
+                this.setState({tokensPrice: prices})
+            } catch(e) {
+                console.error(e)
+            }
+        }
+
+        const pricesInterval = setInterval(async () => {
+            updatePriceJob()
+        }, 60000)
+
+        updatePriceJob()
+        this.setState({pricesInterval})
+    }
+
+    componentWillUnmount() {
+        if (this.state.pricesInterval !== undefined) {
+            clearInterval(this.state.pricesInterval)
+        }
     }
 
     async fetchPools(filter) {
@@ -83,6 +117,29 @@ class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
         this.setState({poolFilter: state})
     }
 
+    getCalculatedRoi(pool: StakingPool): string {
+        try {
+        const priceInput: TokenUsdtPriceRequest = this.state.tokensPrice.find(x => x.coin === pool.inputSymbol)
+        const totalAmountInputWorth: number = (pool.max_pooled / (10 ** 18)) * priceInput.price
+        const priceOutput: TokenUsdtPriceRequest = (pool.outputSymbol === "USDT") ? {coin:"USDT", price: 1} :
+        this.state.tokensPrice.find(x => x.coin === pool.outputSymbol)
+        const totalAmountOutputWorth: number = priceOutput.price * (pool.amount_reward / 10 ** 18)
+        const totalWithBonus = totalAmountInputWorth + totalAmountOutputWorth
+
+        const percent = 100 - ((totalAmountInputWorth /  totalWithBonus) * 100)
+
+        console.log(`${totalAmountInputWorth} vs ${totalWithBonus} = ${percent}`)
+        return `~ ${percent.toFixed(3)}% (${(pool.amount_reward / 10 ** 18)} ${pool.outputSymbol})`
+        } catch (e) { console.error(e); return `${(pool.amount_reward / 10 ** 18)} ${pool.outputSymbol}`;}
+    }
+
+    getEquivalentUsdtWorth(symbol: string, amount: number): string {
+        try {
+            const dataSymbol: TokenUsdtPriceRequest = this.state.tokensPrice.find(x => x.coin === symbol)
+            return (amount * dataSymbol.price).toFixed(2)
+        } catch (e) { console.error(e); return "0.00";}
+    }
+
     render() {
         return <div>
             <div className="content-section">
@@ -129,7 +186,7 @@ class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
                     </circle>
                 </svg>}
 
-                {!this.state.loading && this.state.pools.map((e: StakingPool, i) => {
+                {!this.state.loading && this.state.pools.reverse().map((e: StakingPool, i) => {
                     return <div key={`pool-${i}`} className="sub-section col-sm-12" style={{background: "linear-gradient(to right, rgb(59 67 107), rgb(21 26 47))", color: "white"}}>
                         <div style={{ display: "flex", flex: "1" }}>
                             <div style={{ margin: "10px", display: "flex", flex: 1 }}>
@@ -210,10 +267,10 @@ class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
                         <div style={{ marginTop: "20px", fontFamily: "monospace"}}>
                             <div style={{ display: "flex", marginTop: "5px", fontSize: "18px" }}>
                                 <div style={{ flex: "1", alignSelf: "left", textAlign: "left" }}>
-                                    Roi Percent
+                                    Roi Result
                                 </div>
                                 <div style={{ flex: "1", alignSelf: "right", textAlign: "right"}}>
-                                    0.00%
+                                    {this.getCalculatedRoi(e)} <p style={{color: "#85bb65"}}>~ {this.getEquivalentUsdtWorth(e.outputSymbol, (e.amount_reward / (10 ** 18)))}$</p>
                                 </div>
                             </div>
 
@@ -222,7 +279,7 @@ class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
                                     Max Cap
                                 </div>
                                 <div style={{ flex: "1", alignSelf: "right", textAlign: "right"}}>
-                                   {(e.total_pooled / (10 ** 18))} / {(e.max_pooled / (10 ** 18))} {e.inputSymbol.toUpperCase()} <p><small>({this.getCapProgress(e.total_pooled, e.max_pooled) + "%"})</small></p>
+                                   {(e.total_pooled / (10 ** 18))} / {(e.max_pooled / (10 ** 18))} {e.inputSymbol.toUpperCase()} <p style={{color: "#85bb65"}}>~ {this.getEquivalentUsdtWorth(e.inputSymbol, (e.max_pooled / (10 ** 18)))}$</p> <p><small>({this.getCapProgress(e.total_pooled, e.max_pooled) + "%"})</small></p>
                                 </div>
                             </div>
                             <div className="p-progress-bar">
