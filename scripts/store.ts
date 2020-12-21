@@ -25,6 +25,7 @@ export { web3 };
 export const wethContract = new web3.eth.Contract(abi.weth as any, Env().WETH_CONTRACT_ADDR);
 export const wbtcContract = new web3.eth.Contract(abi.weth as any, Env().WBTC_CONTRACT_ADDR);
 export const peetPayContract = new web3.eth.Contract(abi.peetPay as any, Env().PEETPAY_CONTRACT_ADDR);
+export const pteTokenContract = new web3.eth.Contract(abi.erc20 as any, Env().PTE_TOKEN_ADDR);
 export const ethStakingContract = new web3.eth.Contract(abi.ethStaking as any, Env().ETH_STAKING_CONTRACT);
 
 export const getErc20Contract = (tokenAddr: string): any => {

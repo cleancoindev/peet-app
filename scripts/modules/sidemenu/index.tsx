@@ -11,10 +11,14 @@ import { AppState } from '../../reducers/types/app';
 import { requestSwitchSidebarOpen } from '../../actions/app';
 import { toastr } from 'react-redux-toastr';
 import StakingPoolProvider from '../../providers/stakingPoolProvider';
+import * as _ from 'underscore';
+import { EthState } from '../../reducers/types/eth';
+import { pteTokenContract, web3 } from '../../store';
 
 interface SidemenuProps {
     location: any,
     app: AppState,
+    eth: EthState,
     requestSwitchSidebarOpen: Function
 }
 
@@ -24,7 +28,8 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
     constructor(props: any) {
         super(props);
         this.state = {
-            poolsCount: 0
+            poolsCount: 0,
+            pteBalance: 0
         }
     }
 
@@ -32,6 +37,20 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
         const count = await StakingPoolProvider.countLiveEthPools();
         if (count === 0) { return }
         this.setState({poolsCount: count})
+    }
+
+    componentDidUpdate(prevProps: SidemenuProps, prevState: any) {
+        if(!_.isEqual(prevProps.eth.accounts, this.props.eth.accounts)){
+            this.fetchBalance();
+        }
+    }
+
+    async fetchBalance() {
+        if(this.props.eth.accounts.length <= 0) return;
+        pteTokenContract.methods.balanceOf(this.props.eth.accounts[0]).call().then((balance) => {
+            const formattedBalance = parseFloat(web3.utils.fromWei(balance.toString(), "ether"));
+            this.setState({pteBalance: formattedBalance});
+        });
     }
 
     render() {
@@ -49,7 +68,7 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
                             PTE available
                         </h3>
                         <div style={{ textAlign: "center", fontSize: "24px" }}>
-                            0
+                            {this.state.pteBalance.toFixed(5)}
                         </div>
                     </div>
                     <div className="menu">
@@ -157,7 +176,8 @@ class Sidemenu extends React.Component<ReducersCombinedState & SidemenuProps, {}
 export default connect((state: any, ownProps: any) => {
     return {
         location: state.router.location,
-        app: state.app
+        app: state.app,
+        eth: state.eth
     }
 }, (dispatch) => {
     return {
