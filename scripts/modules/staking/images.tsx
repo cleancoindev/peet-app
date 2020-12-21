@@ -6,7 +6,7 @@ export const getImageByPoolName = (name: string): string => {
     } else if (name.includes("aave")) {
         return require(`../../../assets/aave.svg`)
     } else if (name.includes("peet")) {
-        return require(`../../../assets/PTE.png`)
+        return require(`../../../assets/pte.png`)
     }
     return "";
 }

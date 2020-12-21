@@ -84,7 +84,7 @@ export default class StakingPoolProvider {
 
             const poolsRaw: any = await EthHelper.callOnContract(ethStakingContract.methods.fetchLivePools(), undefined)
             const poolsPlusRaw: any = await EthHelper.callOnContract(ethStakingContract.methods.fetchLivePoolsPlus(), undefined)
-            const pools: StakingPool[] = []
+            var pools: StakingPool[] = []
 
             for (var i = 0; i < poolsRaw[0].length; i++) {
                 const inputAssetContract = getErc20Contract(poolsRaw[2][i])
@@ -108,6 +108,7 @@ export default class StakingPoolProvider {
                     max_wallet_pooled: 0
                 })
             }
+            pools = pools.reverse()
 
             localStorage.setItem('livePools', JSON.stringify({
                 pools,
@@ -140,7 +141,7 @@ export default class StakingPoolProvider {
 
             const poolsRaw: any = await EthHelper.callOnContract(ethStakingContract.methods.fetchEndedPools(), undefined)
             const poolsPlusRaw: any = await EthHelper.callOnContract(ethStakingContract.methods.fetchEndedPoolsPlus(), undefined)
-            const pools: StakingPool[] = []
+            var pools: StakingPool[] = []
 
             for (var i = 0; i < poolsRaw[0].length; i++) {
                 const inputAssetContract = getErc20Contract(poolsRaw[2][i])
@@ -164,6 +165,8 @@ export default class StakingPoolProvider {
                     max_wallet_pooled: 0
                 })
             }
+
+            pools = pools.reverse()
 
             localStorage.setItem('endedPools', JSON.stringify({
                 pools,

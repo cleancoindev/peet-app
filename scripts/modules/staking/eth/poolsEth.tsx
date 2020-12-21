@@ -118,23 +118,28 @@ class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
     }
 
     getCalculatedRoi(pool: StakingPool): string {
+        const inputDecimalCalculation: number = pool.inputSymbol !== "USDT" ? (10 ** 18) : (10 ** 6)
+        const outputDecimalCalculation: number = pool.outputSymbol !== "USDT" ? (10 ** 18) : (10 ** 6)
         try {
         const priceInput: TokenUsdtPriceRequest = this.state.tokensPrice.find(x => x.coin === pool.inputSymbol)
-        const totalAmountInputWorth: number = (pool.max_pooled / (10 ** 18)) * priceInput.price
+        const totalAmountInputWorth: number = (pool.max_pooled / inputDecimalCalculation) * priceInput.price
         const priceOutput: TokenUsdtPriceRequest = (pool.outputSymbol === "USDT") ? {coin:"USDT", price: 1} :
         this.state.tokensPrice.find(x => x.coin === pool.outputSymbol)
-        const totalAmountOutputWorth: number = priceOutput.price * (pool.amount_reward / 10 ** 18)
+        const totalAmountOutputWorth: number = priceOutput.price * (pool.amount_reward / outputDecimalCalculation)
         const totalWithBonus = totalAmountInputWorth + totalAmountOutputWorth
 
         const percent = 100 - ((totalAmountInputWorth /  totalWithBonus) * 100)
 
         console.log(`${totalAmountInputWorth} vs ${totalWithBonus} = ${percent}`)
-        return `~ ${percent.toFixed(3)}% (${(pool.amount_reward / 10 ** 18)} ${pool.outputSymbol})`
-        } catch (e) { console.error(e); return `${(pool.amount_reward / 10 ** 18)} ${pool.outputSymbol}`;}
+        return `~ ${percent.toFixed(3)}% (${(pool.amount_reward / outputDecimalCalculation)} ${pool.outputSymbol})`
+        } catch (e) { console.error(e); return `${(pool.amount_reward / outputDecimalCalculation)} ${pool.outputSymbol}`;}
     }
 
     getEquivalentUsdtWorth(symbol: string, amount: number): string {
         try {
+            const decimal: number = symbol !== "USDT" ? (10 ** 18) : (10 ** 6)
+            amount = amount / decimal
+
             const dataSymbol: TokenUsdtPriceRequest = this.state.tokensPrice.find(x => x.coin === symbol)
             return (amount * dataSymbol.price).toFixed(2)
         } catch (e) { console.error(e); return "0.00";}
@@ -186,8 +191,8 @@ class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
                     </circle>
                 </svg>}
 
-                {!this.state.loading && this.state.pools.reverse().map((e: StakingPool, i) => {
-                    return <div key={`pool-${i}`} className="sub-section col-sm-12" style={{background: "linear-gradient(to right, rgb(59 67 107), rgb(21 26 47))", color: "white"}}>
+                {!this.state.loading && this.state.pools.map((e: StakingPool, i) => {
+                    return <div key={`pool-${i}`} style={{display:'inline-flex'}} className="content-section col-sm-6"> <div className="sub-section col-sm-12" style={{background: "linear-gradient(to right, rgb(59 67 107), rgb(21 26 47))", color: "white"}}>
                         <div style={{ display: "flex", flex: "1" }}>
                             <div style={{ margin: "10px", display: "flex", flex: 1 }}>
                                 <img src={getImageByPoolName(e.name)} 
@@ -267,10 +272,10 @@ class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
                         <div style={{ marginTop: "20px", fontFamily: "monospace"}}>
                             <div style={{ display: "flex", marginTop: "5px", fontSize: "18px" }}>
                                 <div style={{ flex: "1", alignSelf: "left", textAlign: "left" }}>
-                                    Roi Result
+                                    Period ROI
                                 </div>
                                 <div style={{ flex: "1", alignSelf: "right", textAlign: "right"}}>
-                                    {this.getCalculatedRoi(e)} <p style={{color: "#85bb65"}}>~ {this.getEquivalentUsdtWorth(e.outputSymbol, (e.amount_reward / (10 ** 18)))}$</p>
+                                    {this.getCalculatedRoi(e)} <p style={{color: "#85bb65"}}>~ {this.getEquivalentUsdtWorth(e.outputSymbol, e.amount_reward)}$</p>
                                 </div>
                             </div>
 
@@ -279,14 +284,14 @@ class EthereumPoolsView extends React.Component<ReducersCombinedState, {}> {
                                     Max Cap
                                 </div>
                                 <div style={{ flex: "1", alignSelf: "right", textAlign: "right"}}>
-                                   {(e.total_pooled / (10 ** 18))} / {(e.max_pooled / (10 ** 18))} {e.inputSymbol.toUpperCase()} <p style={{color: "#85bb65"}}>~ {this.getEquivalentUsdtWorth(e.inputSymbol, (e.max_pooled / (10 ** 18)))}$</p> <p><small>({this.getCapProgress(e.total_pooled, e.max_pooled) + "%"})</small></p>
+                                   {(e.total_pooled / (10 ** 18))} / {(e.max_pooled / (10 ** 18))} {e.inputSymbol.toUpperCase()} <p style={{color: "#85bb65"}}>~ {this.getEquivalentUsdtWorth(e.inputSymbol, e.max_pooled)}$</p> <p><small>({this.getCapProgress(e.total_pooled, e.max_pooled) + "%"})</small></p>
                                 </div>
                             </div>
                             <div className="p-progress-bar">
                                 <div className="inner" style={{ width: this.getCapProgress(e.total_pooled, e.max_pooled) + "%" }}></div>
                             </div>
                         </div>
-                    </div>
+                    </div></div>
                 })}
             </div>
 

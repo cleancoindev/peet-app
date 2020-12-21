@@ -24,7 +24,7 @@ class Tokens extends React.Component {
 
                     <div style={{ textAlign: "center", marginTop: "15px" }}>
                         <div className="btn-icon-rounded" onClick={() => {}}>
-                            <a target="_blank" href="https://etherscan.io/token/0x509c136121E1C60D3EAc26ea20FEEaE1f51959BA"><i className="fas fa-sign-in-alt"></i> Go to Staking Contract</a>
+                            <a target="_blank" href="https://etherscan.io/address/0x509c136121E1C60D3EAc26ea20FEEaE1f51959BA"><i className="fas fa-sign-in-alt"></i> Go to Staking Contract</a>
                         </div>
                     </div>
                 </div>
@@ -43,7 +43,7 @@ class Tokens extends React.Component {
 
                     <div style={{ textAlign: "center", marginTop: "15px" }}>
                         <div className="btn-icon-rounded" onClick={() => {}}>
-                            <a target="_blank" href="https://etherscan.io/token/0x770b6b2bdf62b1a54fd68e2447d51671da0ebf03"><i className="fas fa-sign-in-alt"></i> Go to Staking Contract</a>
+                            <a target="_blank" href="#"><i className="fas fa-sign-in-alt"></i> Go to Staking Contract</a>
                         </div>
                     </div>
                 </div>

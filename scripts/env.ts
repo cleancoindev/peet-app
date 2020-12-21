@@ -36,4 +36,4 @@ const envs = {
     "production": prodEnv
 }
 
-export default (): Env => (envs['development'] as any) as Env;
+export default (): Env => (envs['production'] as any) as Env;

@@ -69,6 +69,7 @@ class StakingDetails extends React.Component<ReducersCombinedState> {
         this.fetchHistory = this.fetchHistory.bind(this)
         this.poolAsset = this.poolAsset.bind(this)
         this.withdraw = this.withdraw.bind(this)
+        this.showMaxRewards = this.showMaxRewards.bind(this)
     }
 
     async fetchHistory(toAdd: number[]) {
@@ -264,6 +265,11 @@ class StakingDetails extends React.Component<ReducersCombinedState> {
         }
     }
 
+    showMaxRewards() : number {
+        const decimal: number = this.state.pool.outputSymbol !== "USDT" ? (10 ** 18) : (10 ** 6)
+        return this.state.pool.amount_reward / decimal
+    }
+
     render() {
         return <div>
             <h1> <span style={{color:"#007bff", cursor:"pointer"}} onClick={() => { this.props.push('/staking') }}>&#8592;</span> Pool Details <span style={{fontSize: 12}}>(poolHash: {this.props.match.params.poolId})</span></h1>
@@ -332,7 +338,7 @@ class StakingDetails extends React.Component<ReducersCombinedState> {
                         <hr/>
                         <div className="sub-text">
                             <div>
-                            <span title="Total of reward amount in that pool" style={{fontSize: 10, letterSpacing: 1}}>Max rewards {this.state.pool.amount_reward / (10 ** 18)} {this.state.pool.outputSymbol} </span>
+                            <span title="Total of reward amount in that pool" style={{fontSize: 10, letterSpacing: 1}}>Max rewards {this.showMaxRewards()} {this.state.pool.outputSymbol} </span>
                             </div>
                         </div>
 
@@ -422,7 +428,7 @@ class StakingDetails extends React.Component<ReducersCombinedState> {
                        
                         <div style={{ textAlign: "center", display: "block", width: "100%" }}>
                             <div style={{ display: "block" }} onClick={() => { }}>
-                                    <input onClick={this.poolAsset} id="submit-staking" type="submit" value={this.state.textPool}></input>
+                                    <input disabled onClick={this.poolAsset} id="submit-staking" type="submit" value={this.state.textPool}></input>
                             </div>
                         </div>
                      </form>
